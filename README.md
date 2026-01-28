@@ -10,7 +10,7 @@
 ### Clone and Build
 ```bash
 # Clone the repository
-git clone https://github.com/Rusan76/ProjectT4.git
+git clone https://github.com/Rusan76/Task_Manager_T4.git
 cd ProjectT4
 
 # Restore NuGet packages
@@ -21,3 +21,4 @@ dotnet build
 
 # Run the application
 dotnet run
+
