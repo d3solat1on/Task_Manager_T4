@@ -11,7 +11,7 @@
 ```bash
 # Clone the repository
 git clone https://github.com/Rusan76/Task_Manager_T4.git
-cd ProjectT4
+cd Task_Manager_T4
 
 # Restore NuGet packages
 dotnet restore
@@ -21,4 +21,5 @@ dotnet build
 
 # Run the application
 dotnet run
+
 
