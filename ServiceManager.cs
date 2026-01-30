@@ -4,8 +4,7 @@ using System.Linq;
 using System.Management;
 using System.ServiceProcess;
 using Spectre.Console;
-using ProjectT4;
-
+namespace ProjectT4;
 public class ServiceManagerUI
 {
     public static void ShowServicesMenu()

@@ -6,15 +6,10 @@ using System.IO;
 using System.Management;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
-using System.Net;
-using System.Net.Sockets;
-using System.Globalization;
-using ProjectT4;
 using System.Threading;
 using System.Linq;
 using Spectre.Console;
-using Microsoft.Win32;
-
+namespace ProjectT4;
 public class GetInfoPc
 {
     

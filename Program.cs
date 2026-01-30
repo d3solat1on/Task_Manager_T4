@@ -69,21 +69,22 @@ internal class Program
                     .Title("[bold cyan]Select an option:[/]")
                     .PageSize(10)
                     .MoreChoicesText("[grey](Move up and down to reveal more options)[/]")
-                    .AddChoices([
-                    "📊 Process Management",
-                    "💻 System Information",
-                    "📸 Screenshot Tool",
-                    "🚀 Program Launcher",
-                    "🖥️ Show System Load",
-                    "ShowNetworkMenu",
-                    "⚡ Startup Manager",
-                    "🌡️ Check Temperature",
-                    "🔧 Service Manager", 
-                    // "Other",
-                    "Drives",
-                    // "Benchmark",
-                    "🎨 OpenMe",
-                    "❌ Exit"
+                    .AddChoices(
+                    [
+                        "📊 Process Management",
+                        "💻 System Information",
+                        "📸 Screenshot Tool",
+                        "🚀 Program Launcher",
+                        "🖥️ Show System Load",
+                        // "ShowNetworkMenu",
+                        "⚡ Startup Manager",
+                        "🌡️ Check Temperature",
+                        "🔧 Service Manager",
+                        "Other",
+                        "Drives",
+                        "Benchmark",
+                        "🎨 OpenMe",
+                        "❌ Exit"
                     ]));
 
             switch (choice)
@@ -103,10 +104,10 @@ internal class Program
                 case "🖥️ Show System Load":
                     ShowSystemLoad();
                     break;
-                case "ShowNetworkMenu":
-                    NetworkMonitor networkMonitor = new();
-                    networkMonitor.ShowNetworkMenu();
-                    break;
+                // case "ShowNetworkMenu":
+                //     NetworkMonitor networkMonitor = new();
+                //     networkMonitor.ShowNetworkMenu();
+                //     break;
                 case "⚡ Startup Manager":
                     try
                     {
@@ -125,15 +126,15 @@ internal class Program
                 case "🔧 Service Manager": 
                     ServiceManagerUI.ShowServicesMenu();
                     break;
-                // case "Other":
-                //     Other.PrintAllOtherFunctions();
-                //     break;     
+                case "Other":
+                    Other.PrintAllOtherFunctions();
+                    break;     
                 case "Drives":
-                    DriveManager2.Main_Menu_Drives();
+                    DriveManager.Main_Menu_Drives();
                     break;
-                // case "Benchmark":
-                //     SystemBenchmark.ShowBenchmarkMenu();
-                //     break;
+                case "Benchmark":
+                    SystemBenchmark.ShowBenchmarkMenu();
+                    break;
                 case "🎨 OpenMe":
                     Rain.ShowReadMeWithRain();
                     break;
@@ -334,8 +335,10 @@ internal class Program
 
     private static long GetWindowsTotalMemory()
     {
-        MEMORYSTATUSEX memStatus = new MEMORYSTATUSEX();
-        memStatus.dwLength = (uint)System.Runtime.InteropServices.Marshal.SizeOf(typeof(MEMORYSTATUSEX));
+        MEMORYSTATUSEX memStatus = new()
+        {
+            dwLength = (uint)System.Runtime.InteropServices.Marshal.SizeOf<MEMORYSTATUSEX>()
+        };
 
         if (GlobalMemoryStatusEx(ref memStatus))
         {

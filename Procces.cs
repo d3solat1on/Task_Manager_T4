@@ -4,7 +4,6 @@ using System.IO;
 using System.Threading;
 using System.Linq;
 using Spectre.Console;
-using System.Collections.Generic;
 
 class Process_management
 {
@@ -495,7 +494,7 @@ class Process_management
         
         Process[] processes = Process.GetProcesses();
         
-        using (StreamWriter sw = new StreamWriter(filePath))
+        using (StreamWriter sw = new(filePath))
         {
             sw.WriteLine("=".PadRight(80, '='));
             sw.WriteLine("PROCESS LIST");

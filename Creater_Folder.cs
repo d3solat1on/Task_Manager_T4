@@ -1,16 +1,5 @@
 using System;
-using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
-using System.Management;
-using System.Runtime.InteropServices;
-using System.Security.Principal;
-using System.Net;
-using System.Net.Sockets;
-using System.Globalization;
-using System.Text;
-using ProjectT4;
 
 class CreaterFolder
 {
@@ -70,23 +59,4 @@ class CreaterFolder
             return fallbackPath;
         }
     }
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 }

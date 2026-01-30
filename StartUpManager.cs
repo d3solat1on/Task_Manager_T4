@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Linq;
 using Microsoft.Win32;
 using Spectre.Console;
 
@@ -23,13 +22,13 @@ internal class StartUpManager
                     new SelectionPrompt<string>()
                         .Title("[bold yellow]Startup Management[/]")
                         .PageSize(10)
-                        .AddChoices(new[] {
+                        .AddChoices([
                         "📋 View All Startup Items",
                         "📁 View Startup Folder",
                         "🔧 View Registry Entries",
                         "📊 Startup Statistics",
                         "🔙 Back to Main Menu"
-                        }));
+                        ]));
 
                 switch (choice)
                 {
@@ -123,15 +122,19 @@ internal class StartUpManager
         
         try
         {
-            
+
+#pragma warning disable CA1416 // Проверка совместимости платформы
             using (RegistryKey key = Registry.CurrentUser.OpenSubKey(
                 @"Software\Microsoft\Windows\CurrentVersion\Run"))
             {
                 if (key != null)
                 {
+#pragma warning disable CA1416 // Проверка совместимости платформы
                     foreach (string valueName in key.GetValueNames())
                     {
+#pragma warning disable CA1416 // Проверка совместимости платформы
                         string value = key.GetValue(valueName)?.ToString() ?? "";
+#pragma warning restore CA1416 // Проверка совместимости платформы
                         table.AddRow(
                             "[blue]Registry[/]",
                             $"[white]{valueName}[/]",
@@ -142,15 +145,19 @@ internal class StartUpManager
                 }
             }
 
-            
+
+#pragma warning disable CA1416 // Проверка совместимости платформы
             using (RegistryKey key = Registry.LocalMachine.OpenSubKey(
                 @"Software\Microsoft\Windows\CurrentVersion\Run"))
             {
                 if (key != null)
                 {
+#pragma warning disable CA1416 // Проверка совместимости платформы
                     foreach (string valueName in key.GetValueNames())
                     {
+#pragma warning disable CA1416 // Проверка совместимости платформы
                         string value = key.GetValue(valueName)?.ToString() ?? "";
+#pragma warning restore CA1416 // Проверка совместимости платформы
                         table.AddRow(
                             "[blue]Registry[/]",
                             $"[white]{valueName}[/]",
@@ -193,7 +200,7 @@ internal class StartUpManager
             {
                 foreach (var file in Directory.GetFiles(userStartup))
                 {
-                    FileInfo fi = new FileInfo(file);
+                    FileInfo fi = new(file);
                     table.AddRow(
                         $"[white]{Path.GetFileName(file)}[/]",
                         $"[grey]{TruncateString(file, 50)}[/]", 
@@ -208,7 +215,7 @@ internal class StartUpManager
             {
                 foreach (var file in Directory.GetFiles(commonStartup))
                 {
-                    FileInfo fi = new FileInfo(file);
+                    FileInfo fi = new(file);
                     table.AddRow(
                         $"[white]{Path.GetFileName(file)}[/]",
                         $"[grey]{TruncateString(file, 50)}[/]", 
@@ -244,14 +251,18 @@ internal class StartUpManager
 
         try
         {
+#pragma warning disable CA1416 // Проверка совместимости платформы
             using (RegistryKey key = Registry.CurrentUser.OpenSubKey(
                 @"Software\Microsoft\Windows\CurrentVersion\Run"))
             {
                 if (key != null)
                 {
+#pragma warning disable CA1416 // Проверка совместимости платформы
                     foreach (string valueName in key.GetValueNames())
                     {
+#pragma warning disable CA1416 // Проверка совместимости платформы
                         string value = key.GetValue(valueName)?.ToString() ?? "";
+#pragma warning restore CA1416 // Проверка совместимости платформы
                         table.AddRow(
                             $"[white]{valueName}[/]",
                             $"[grey]{TruncateString(value, 60)}[/]", 
@@ -261,14 +272,18 @@ internal class StartUpManager
                 }
             }
 
+#pragma warning disable CA1416 // Проверка совместимости платформы
             using (RegistryKey key = Registry.LocalMachine.OpenSubKey(
                 @"Software\Microsoft\Windows\CurrentVersion\Run"))
             {
                 if (key != null)
                 {
+#pragma warning disable CA1416 // Проверка совместимости платформы
                     foreach (string valueName in key.GetValueNames())
                     {
+#pragma warning disable CA1416 // Проверка совместимости платформы
                         string value = key.GetValue(valueName)?.ToString() ?? "";
+#pragma warning restore CA1416 // Проверка совместимости платформы
                         table.AddRow(
                             $"[white]{valueName}[/]",
                             $"[grey]{TruncateString(value, 60)}[/]", 
@@ -290,7 +305,7 @@ internal class StartUpManager
         AnsiConsole.Write(table);
     }
 
-    private void ShowStartupStatistics()
+    private static void ShowStartupStatistics()
     {
         int folderCount = 0;
         int registryCount = 0;
@@ -306,16 +321,22 @@ internal class StartUpManager
             if (Directory.Exists(commonStartup))
                 folderCount += Directory.GetFiles(commonStartup).Length;
 
+#pragma warning disable CA1416 // Проверка совместимости платформы
             using (RegistryKey key1 = Registry.CurrentUser.OpenSubKey(
                 @"Software\Microsoft\Windows\CurrentVersion\Run"))
             {
+#pragma warning disable CA1416 // Проверка совместимости платформы
                 registryCount += key1?.GetValueNames().Length ?? 0;
+#pragma warning restore CA1416 // Проверка совместимости платформы
             }
 
+#pragma warning disable CA1416 // Проверка совместимости платформы
             using (RegistryKey key2 = Registry.LocalMachine.OpenSubKey(
                 @"Software\Microsoft\Windows\CurrentVersion\Run"))
             {
+#pragma warning disable CA1416 // Проверка совместимости платформы
                 registryCount += key2?.GetValueNames().Length ?? 0;
+#pragma warning restore CA1416 // Проверка совместимости платформы
             }
         }
         catch { }
@@ -343,7 +364,7 @@ internal class StartUpManager
     }
 
     
-    private string TruncateString(string text, int maxLength)
+    private static string TruncateString(string text, int maxLength)
     {
         if (string.IsNullOrEmpty(text) || text.Length <= maxLength)
             return text;
