@@ -7,7 +7,7 @@ namespace Task_Manager_T4;
 
 class SystemBenchmark
 {
-    public static void ShowBenchmarkMenu()
+    public static async Task ShowBenchmarkMenu()
     {
         AnsiConsole.Clear();
         AnsiConsole.Write(new Rule($"[{GraphicSettings.SecondaryColor}]System Performance Benchmark[/]").RuleStyle(GraphicSettings.AccentColor).LeftJustified());
@@ -17,12 +17,12 @@ class SystemBenchmark
                 .Title($"[{GraphicSettings.SecondaryColor}]Выберите тип теста:[/]")
                 .AddChoices(["CPU Stress Test (Parallel)", "RAM Speed Test", "Назад"]));
 
-        if (choice == "CPU Stress Test (Parallel)") RunCpuBenchmark();
-        else if (choice == "RAM Speed Test") RunRamBenchmark();
-        else if (choice == "Назад") Program.Function_list();
+        if (choice == "CPU Stress Test (Parallel)") await RunCpuBenchmark();
+        else if (choice == "RAM Speed Test") await RunRamBenchmark();
+        else if (choice == "Назад") await Program.Function_list();
     }
 
-    private static void RunCpuBenchmark()
+    private static async Task RunCpuBenchmark()
     {
         AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]Запуск теста CPU... Все ядра будут нагружены на 5 секунд.[/]");
         
@@ -54,10 +54,10 @@ class SystemBenchmark
         AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]Относительный балл (Ops/sec):[/] [{GraphicSettings.SecondaryColor}]{operations / 5:N0}[/]");
         AnsiConsole.MarkupLine("Press any key to return.");
         Console.ReadLine();
-        ShowBenchmarkMenu();
+        await ShowBenchmarkMenu();
     }
 
-    private static void RunRamBenchmark()
+    private static async Task RunRamBenchmark()
     {
         AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]Запуск теста RAM (Запись/Чтение 1 ГБ)...[/]");
 
@@ -93,6 +93,6 @@ class SystemBenchmark
         GC.Collect();
         AnsiConsole.MarkupLine("Press any key to return.");
         Console.ReadLine();
-        ShowBenchmarkMenu();
+        await ShowBenchmarkMenu();
     }
 }

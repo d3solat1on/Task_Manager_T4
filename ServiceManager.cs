@@ -83,7 +83,7 @@ public class ServiceManagerUI
             var services = ServiceController.GetServices();
             var table = new Table()
                 .Title($"[{GraphicSettings.AccentColor}]Windows Services ({services.Length})[/]")
-                .BorderColor(GraphicSettings.GetColor(GraphicSettings.AccentColor))
+                .BorderColor(GraphicSettings.GetThemeColor)
                 .Border(TableBorder.Rounded)
                 .AddColumn(new TableColumn($"[{GraphicSettings.SecondaryColor}]Name[/]").LeftAligned())
                 .AddColumn(new TableColumn($"[{GraphicSettings.SecondaryColor}]Display Name[/]").LeftAligned())
@@ -125,7 +125,7 @@ public class ServiceManagerUI
             
             var table = new Table()
                 .Title($"[{GraphicSettings.AccentColor}]Running Services ({runningServices.Count()})[/]")
-                .BorderColor(GraphicSettings.GetColor(GraphicSettings.AccentColor))
+                .BorderColor(GraphicSettings.GetThemeColor)
                 .Border(TableBorder.Rounded)
                 .AddColumn(new TableColumn($"[{GraphicSettings.SecondaryColor}]Name[/]").LeftAligned())
                 .AddColumn(new TableColumn($"[{GraphicSettings.SecondaryColor}]Display Name[/]").LeftAligned())
@@ -160,7 +160,7 @@ public class ServiceManagerUI
             
             var table = new Table()
                 .Title($"[{GraphicSettings.AccentColor}]Stopped Services ({stoppedServices.Count()})[/]")
-                .BorderColor(GraphicSettings.GetColor(GraphicSettings.AccentColor))
+                .BorderColor(GraphicSettings.GetThemeColor)
                 .Border(TableBorder.Rounded)
                 .AddColumn(new TableColumn($"[{GraphicSettings.SecondaryColor}]Name[/]").LeftAligned())
                 .AddColumn(new TableColumn($"[{GraphicSettings.SecondaryColor}]Display Name[/]").LeftAligned())
@@ -207,7 +207,7 @@ public class ServiceManagerUI
             
             var table = new Table()
                 .Title($"[{GraphicSettings.AccentColor}]Search Results: '{searchTerm}' ({services.Count()})[/]")
-                .BorderColor(GraphicSettings.GetColor(GraphicSettings.AccentColor))
+                .BorderColor(GraphicSettings.GetThemeColor)
                 .Border(TableBorder.Rounded)
                 .AddColumn(new TableColumn($"[{GraphicSettings.SecondaryColor}]Name[/]").LeftAligned())
                 .AddColumn(new TableColumn($"[{GraphicSettings.SecondaryColor}]Display Name[/]").LeftAligned())
@@ -244,7 +244,7 @@ public class ServiceManagerUI
             using var service = new ServiceController(serviceName);
             var table = new Table()
                 .Title($"[{GraphicSettings.AccentColor}]Dependencies for '{serviceName}'[/]")
-                .BorderColor(GraphicSettings.GetColor("cyan"))
+                .BorderColor(GraphicSettings.GetThemeColor)
                 .Border(TableBorder.Rounded)
                 .AddColumn(new TableColumn($"[{GraphicSettings.SecondaryColor}]Dependent Service[/]").LeftAligned())
                 .AddColumn(new TableColumn($"[{GraphicSettings.SecondaryColor}]Status[/]").Centered())
@@ -422,7 +422,7 @@ public class ServiceManagerUI
                 .Start($"[{GraphicSettings.NeutralColor}]Changing startup type to {startupType}...[/]", ctx =>
                 {
                     ctx.Spinner(Spinner.Known.Dots);
-                    ctx.SpinnerStyle(Style.Parse(GraphicSettings.SecondaryColor));
+                    ctx.SpinnerStyle(Style.Parse(GraphicSettings.AccentColor));
                     
                     var process = new Process
                     {
@@ -516,14 +516,14 @@ public class ServiceManagerUI
     {
         try
         {
-#pragma warning disable CA1416
+
             using var searcher = new ManagementObjectSearcher(
                 $"SELECT StartMode FROM Win32_Service WHERE Name = '{serviceName}'");
             foreach (ManagementObject service in searcher.Get().Cast<ManagementObject>())
             {
                 return service["StartMode"]?.ToString() ?? "Unknown";
             }
-#pragma warning restore CA1416
+
         }
         catch
         {
@@ -536,7 +536,7 @@ public class ServiceManagerUI
         try
         {
             int pid = 0;
-#pragma warning disable CA1416
+
             using (var searcher = new ManagementObjectSearcher(
                 $"SELECT ProcessId FROM Win32_Service WHERE Name = '{serviceName}'"))
             {
@@ -551,7 +551,7 @@ public class ServiceManagerUI
 
             using var process = Process.GetProcessById(pid);
             return process.WorkingSet64 / 1024;
-#pragma warning restore CA1416
+
         }
         catch
         {
@@ -564,7 +564,6 @@ public class ServiceManagerUI
         try
         {
             int count = 0;
-#pragma warning disable CA1416
             using (var searcher = new ManagementObjectSearcher(
                 "SELECT StartMode FROM Win32_Service"))
             {
@@ -577,7 +576,6 @@ public class ServiceManagerUI
             }
 
             return count;
-#pragma warning restore CA1416
         }
         catch
         {
@@ -594,12 +592,12 @@ public class ServiceManagerUI
             .AddColumn(new GridColumn());
         grid.AddRow(
             new Panel($"[{GraphicSettings.AccentColor}]{services.Count(s => s.Status == ServiceControllerStatus.Running)}[/]\n[{GraphicSettings.SecondaryColor}]Running[/]")
-                .BorderColor(Color.Green),
+                .BorderColor(GraphicSettings.GetThemeColor),
             new Panel($"[{GraphicSettings.AccentColor}]{services.Count(s => s.Status == ServiceControllerStatus.Stopped)}[/]\n[{GraphicSettings.SecondaryColor}]Stopped[/]")
-                .BorderColor(Color.Red),
+                .BorderColor(GraphicSettings.GetThemeColor),
             new Panel($"[{GraphicSettings.AccentColor}]{services.Count(s => s.Status == ServiceControllerStatus.Paused)}[/]\n[{GraphicSettings.SecondaryColor}]Paused[/]")
-                .BorderColor(Color.Yellow),
-            new Panel($"[{GraphicSettings.AccentColor}]{services.Length}[/]\n[{GraphicSettings.SecondaryColor}]Total[/]").BorderColor(Color.Blue)
+                .BorderColor(GraphicSettings.GetThemeColor),
+            new Panel($"[{GraphicSettings.AccentColor}]{services.Length}[/]\n[{GraphicSettings.SecondaryColor}]Total[/]").BorderColor(GraphicSettings.GetThemeColor)
         );
         AnsiConsole.Write(grid);
     }
@@ -619,7 +617,7 @@ public class ServiceManagerUI
     {
         if (string.IsNullOrEmpty(text)) return text;
         if (text.Length <= maxLength) return text;
-        return text.Substring(0, maxLength - 3) + "...";
+        return string.Concat(text.AsSpan(0, maxLength - 3), "...");
     }
     
     private static void ShowError(string message)

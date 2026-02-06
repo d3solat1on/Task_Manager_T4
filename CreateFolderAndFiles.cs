@@ -427,8 +427,8 @@ class Files() : Folders
         FileInfo info = new(path);
 
         var table = new Table()
-            .Border(TableBorder.Rounded);
-            // .BorderColor(Color.FromName(GraphicSettings.AccentColor)); //Починить как-нибуудь потом
+            .Border(TableBorder.Rounded)
+            .BorderColor(GraphicSettings.GetThemeColor);
             
         table.AddColumn($"[{GraphicSettings.AccentColor}]Свойство[/]");
         table.AddColumn($"[{GraphicSettings.AccentColor}]Значение[/]");

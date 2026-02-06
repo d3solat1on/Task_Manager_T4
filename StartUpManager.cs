@@ -125,7 +125,7 @@ internal class StartUpManager
     {
         var table = new Table()
             .Title($"[{GraphicSettings.SecondaryColor}]All Startup Items[/]")
-            .BorderColor(Color.DarkOrange) //исправить
+            .BorderColor(GraphicSettings.GetThemeColor) 
             .Border(TableBorder.Rounded)
             .AddColumn(new TableColumn($"[{GraphicSettings.SecondaryColor}]Type[/]").Centered())
             .AddColumn(new TableColumn($"[{GraphicSettings.SecondaryColor}]Name[/]").LeftAligned())
@@ -243,7 +243,7 @@ internal class StartUpManager
 
         var table = new Table()
             .Title($"[{GraphicSettings.SecondaryColor}]Startup Folder Files[/]")
-            .BorderColor(Color.DarkOrange)
+            .BorderColor(GraphicSettings.GetThemeColor)
             .Border(TableBorder.Rounded)
             .AddColumn(new TableColumn($"[{GraphicSettings.SecondaryColor}]File Name[/]").LeftAligned())
             .AddColumn(new TableColumn($"[{GraphicSettings.SecondaryColor}]Path[/]").LeftAligned())
@@ -300,7 +300,7 @@ internal class StartUpManager
 
         var table = new Table()
             .Title($"[ {GraphicSettings.SecondaryColor}]Registry Startup Entries[/]")
-            .BorderColor(Color.DarkOrange)
+            .BorderColor(GraphicSettings.GetThemeColor)
             .Border(TableBorder.Rounded)
             .AddColumn(new TableColumn($"[ {GraphicSettings.SecondaryColor}]Name[/]").LeftAligned())
             .AddColumn(new TableColumn($"[ {GraphicSettings.SecondaryColor}]Value[/]").LeftAligned())
@@ -398,7 +398,7 @@ internal class StartUpManager
                               $"📊 Total Startup Items: [{GraphicSettings.SecondaryColor}]{folderCount + registryCount}[/]")
         {
             Border = BoxBorder.Rounded,
-            BorderStyle = new Style(Color.DarkOrange),
+            BorderStyle = new Style(GraphicSettings.GetThemeColor),
             Padding = new Padding(2, 1, 2, 1)
         };
 

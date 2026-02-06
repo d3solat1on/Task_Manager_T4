@@ -4,10 +4,11 @@ using System.Diagnostics;
 using Spectre.Console;
 using Task_Manager_T4;
 using System.IO;
+using System.Threading.Tasks;
 
 internal class Program
 {
-    static void Main(string[] args)
+    static async Task Main(string[] args)
     {
         Console.OutputEncoding = System.Text.Encoding.UTF8;
         Console.Title = "Task Manager T4";
@@ -50,13 +51,13 @@ internal class Program
                     .Header("[bold white] System Dashboard [/]")
                     .Expand()
                     .BorderColor(Color.White));
-            AnsiConsole.Write(new Rule("[white]V1.3 Press any key to continue[/]").RuleStyle("orange1"));
+            AnsiConsole.Write(new Rule($"[{GraphicSettings.SecondaryColor}]{GraphicSettings.AppVersion} Press any key to continue[/]").RuleStyle(GraphicSettings.AccentColor));
             Console.ReadKey();
-            Function_list();
+            await Function_list();
         }
     }
 
-    public static void Function_list()
+    public static async Task Function_list()
     {
         Console.Clear();
         while (true)
@@ -81,6 +82,7 @@ internal class Program
                         // "📸 Screenshot Tool",
                         "File and folder manager",
                         "Program Manager",
+                        "Network",
                         "❔ Other",
                         "Graphic Settings",
                         "🎨 OpenMe",
@@ -132,7 +134,7 @@ internal class Program
                     DriveManager.Main_Menu_Drives();
                     break;
                 case "🔩 Benchmark":
-                    SystemBenchmark.ShowBenchmarkMenu();
+                    await SystemBenchmark.ShowBenchmarkMenu(); //che za huynya 
                     break;
                 case "🎨 OpenMe":
                     Rain.ShowReadMeWithRain();
@@ -151,7 +153,10 @@ internal class Program
                     break;      
                 case "Graphic Settings":
                     GraphicSettings.ChangeTheme();
-                    break;      
+                    break;
+                case "Network":
+                    await NetWork.MainMenuNetWork();
+                    break;          
                 case "❌ Exit":
                     Environment.Exit(0);
                     break;
@@ -265,7 +270,7 @@ internal class Program
             }
 
             AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]Updates every two seconds. Press any key to exit.[/]");
-            AnsiConsole.Write(table.BorderColor(Color.DarkOrange3)); //dodelat'
+            AnsiConsole.Write(table.BorderColor(GraphicSettings.GetThemeColor)); //dodelat' //22:32:40 sdelal
 
             Thread.Sleep(2000);
         }

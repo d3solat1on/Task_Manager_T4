@@ -133,21 +133,21 @@ public class Rain
     }
 
     private static void ShowReadMeInformation()
-{
-    Console.Clear();
-    var content = new Rows(
-        new Text("This programm made by me =)"),
-        new Text(""),
-        new Text("Anyone can predict the future... but only the dreamer makes it come true", new Style(Color.White))
-    );
+    {
+        Console.Clear();
+        var content = new Rows(
+            new Text("This programm made by me =)"),
+            new Text(""),
+            new Text("Anyone can predict the future... but only the dreamer makes it come true", new Style(Color.White))
+        );
 
-    var panel = new Panel(content)
-        .Header($"[{GraphicSettings.AccentColor}] INFO [/]")
-        .BorderColor(GraphicSettings.GetThemeColor)
-        .RoundedBorder()
-        .Expand(); 
-    AnsiConsole.Write(panel);
-    AnsiConsole.Write(new Rule($"[{GraphicSettings.SecondaryColor}]Press any key[/]").RuleStyle(GraphicSettings.AccentColor));
-    Console.ReadKey();
-}
+        var panel = new Panel(content)
+            .Header($"[{GraphicSettings.AccentColor}] INFO [/]")
+            .BorderColor(GraphicSettings.GetThemeColor)
+            .RoundedBorder()
+            .Expand();
+        AnsiConsole.Write(panel);
+        AnsiConsole.Write(new Rule($"[{GraphicSettings.SecondaryColor}]Press any key[/]").RuleStyle(GraphicSettings.AccentColor));
+        Console.ReadKey();
+    }
 }

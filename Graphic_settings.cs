@@ -5,6 +5,7 @@ namespace Task_Manager_T4;
 
 public class GraphicSettings
 {
+    public const string AppVersion = "V1.3.1";
     public static int PageSize = 12;
     public static string AccentColor = "orange1";  //MainColor
     public static string SecondaryColor = "white"; //SecondColorForText
@@ -43,15 +44,15 @@ public class GraphicSettings
                 ThemeName = "Classic";
                 break;
             case "🟢 Matrix (Green/Black)":
-                AccentColor = "green3";
-                SecondaryColor = "green1";
+                AccentColor = "green1";
+                SecondaryColor = "green3";
                 NeutralColor = "darkgreen";
                 ThemeName = "Matrix";
                 break;
             case "⚪ Light (Black/White)":
-                AccentColor = "white";
-                SecondaryColor = "black";
-                NeutralColor = "grey35";
+                AccentColor = "Gray35";
+                SecondaryColor = "white";
+                NeutralColor = "Gray70";
                 ThemeName = "Light";
                 break;
             default:
