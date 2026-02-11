@@ -65,6 +65,10 @@ class Process_management
                 case "🔙 Back to Main Menu":
                     Console.Clear();
                     return;
+                case "RemoveCritProcess":
+                    RemoveCritProcess();
+                    Console.Clear();
+                    break;    
             }
             
             AnsiConsole.MarkupLine($"\n[{GraphicSettings.NeutralColor}]Нажмите любую клавишу для продолжения...[/]");
@@ -72,7 +76,10 @@ class Process_management
         }
     }
     
-    
+    private static void RemoveCritProcess()
+    {
+
+    }
     public static void ShowAllProcessesSpectre()
     {
         Console.Clear();

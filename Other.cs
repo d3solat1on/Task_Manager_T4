@@ -343,6 +343,7 @@ public class Other
         public static void CreateNewUser()
         {
             Console.Clear();
+            AnsiConsole.Write(new Rule($"[{GraphicSettings.AccentColor}]CREATE LOCAL USER[/]").RuleStyle(GraphicSettings.SecondaryColor).LeftJustified());
 
             var username = AnsiConsole.Prompt(
                 new TextPrompt<string>($"[{GraphicSettings.SecondaryColor}]Enter username:[/]")
@@ -374,41 +375,43 @@ public class Other
             try
             {
                 using var ctx = new PrincipalContext(ContextType.Machine);
+
+                if (UserPrincipal.FindByIdentity(ctx, IdentityType.SamAccountName, username) != null)
+                {
+                    AnsiConsole.MarkupLine($"[yellow]⚠ User '{username}' already exists![/]");
+                    return;
+                }
+
                 using var user = new UserPrincipal(ctx)
                 {
                     SamAccountName = username,
-                    UserPrincipalName = $"{username}@{Environment.MachineName}",
+                    Name = fullName,
                     DisplayName = fullName,
                     Description = description,
                     PasswordNeverExpires = true,
-                    Enabled = true
+                    Enabled = true,
+                    UserCannotChangePassword = false
                 };
 
-
-
                 user.SetPassword(password);
-
                 user.Save();
 
+                AnsiConsole.MarkupLine($"[{GraphicSettings.AccentColor}]✅ User '{username}' created successfully![/]");
 
-                AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]✅ User '{username}' created successfully![/]");
-
-                if (AnsiConsole.Confirm($"[{GraphicSettings.SecondaryColor}]Add user to 'Users' group?[/]", true))
-                {
-                    AddUserToGroup(username, "Users");
-                }
-
-                if (AnsiConsole.Confirm($"[{GraphicSettings.SecondaryColor}]Create user folder in Documents?[/]", false))
-                {
-                    CreateUserFolder(username);
-                }
+                AnsiConsole.MarkupLine($"[{GraphicSettings.NeutralColor}]Press any key to continue...[/]");
+                Console.ReadKey();
+            }
+            catch (UnauthorizedAccessException)
+            {
+                AnsiConsole.MarkupLine($"[red]❌ Access denied! Run as Administrator.[/]");
+                Console.ReadKey();
             }
             catch (Exception ex)
             {
                 AnsiConsole.MarkupLine($"[red]❌ Error creating user: {ex.Message}[/]");
+                Console.ReadKey();
             }
         }
-
         public static void DeleteUser()
         {
             try
