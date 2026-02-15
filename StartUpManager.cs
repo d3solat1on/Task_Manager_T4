@@ -20,32 +20,32 @@ internal class StartUpManager
                         .Title($"[{GraphicSettings.SecondaryColor}]Select category[/]")
                         .PageSize(12)
                         .AddChoices([
-                        "📋 View All Startup Items",
-                        "📁 View Startup Folder",
-                        "🔧 View Registry Entries",
-                        "📊 Startup Statistics",
+                        "View All Startup Items",
+                        "View Startup Folder",
+                        "View Registry Entries",
+                        "Startup Statistics",
                         "Delete the file from startup",
-                        "🔙 Back to Main Menu"
+                        "Back to Main Menu"
                         ]));
 
                 switch (choice)
                 {
-                    case "📋 View All Startup Items":
+                    case "View All Startup Items":
                         ShowAllStartupItemsTable();
                         break;
-                    case "📁 View Startup Folder":
+                    case "View Startup Folder":
                         ShowStartupFolderTable();
                         break;
-                    case "🔧 View Registry Entries":
+                    case "View Registry Entries":
                         ShowRegistryStartupTable();
                         break;
-                    case "📊 Startup Statistics":
+                    case "Startup Statistics":
                         ShowStartupStatistics();
                         break;
                     case "Delete the file from startup":
                         RemoveFromStartup();
                         break;
-                    case "🔙 Back to Main Menu":
+                    case "Back to Main Menu":
                         Console.Clear();
                         return true;
                 }

@@ -19,36 +19,36 @@ class OpenProgram
                     .Title($"[{GraphicSettings.SecondaryColor}]Select Category:[/]")
                     .PageSize(GraphicSettings.PageSize)
                     .AddChoices([
-                        "🛠️  System Tools",
-                        "⚙️  Administrative Tools", 
-                        "🎛️  Control Panel",
-                        "🔧 Development Tools",
-                        "🌐 Internet & Network",
-                        "📁 Custom File/Path",
-                        "🔙 Back to Main Menu"
+                        "System Tools",
+                        "Administrative Tools", 
+                        "Control Panel",
+                        "Development Tools",
+                        "Internet & Network",
+                        "Custom File/Path",
+                        "Back to Main Menu"
                     ]));
             
             switch (category)
             {
-                case "🛠️  System Tools":
+                case "System Tools":
                     OpenSystemTools();
                     break;
-                case "⚙️  Administrative Tools":
+                case "Administrative Tools":
                     OpenAdministrativeTools();
                     break;
-                case "🎛️  Control Panel":
+                case "Control Panel":
                     OpenControlPanel();
                     break;
-                case "🔧 Development Tools":
+                case "Development Tools":
                     OpenDevelopmentTools();
                     break;
-                case "🌐 Internet & Network":
+                case "Internet & Network":
                     OpenInternetTools();
                     break;
-                case "📁 Custom File/Path":
+                case "Custom File/Path":
                     OpenCustomFile();
                     break;
-                case "🔙 Back to Main Menu":
+                case "Back to Main Menu":
                     Console.Clear();
                     return;
             }
@@ -65,62 +65,62 @@ class OpenProgram
                 .PageSize(GraphicSettings.PageSize)
                 .MoreChoicesText($"[{GraphicSettings.NeutralColor}](Move up/down to see more)[/]")
                 .AddChoices([
-                    "💻 Command Prompt",
-                    "🐚 PowerShell",
-                    "🪟 Windows Terminal",
-                    "📝 Notepad",
-                    "🖼️ Paint",
-                    "🧮 Calculator",
-                    "📁 File Explorer",
-                    "📚 WordPad",
-                    "🎤 Voice Recorder",
-                    "📷 Camera",
-                    "🎵 Media Player",
-                    "🔙 Back"
+                    "Command Prompt",
+                    "PowerShell",
+                    "Windows Terminal",
+                    "Notepad",
+                    "Paint",
+                    "Calculator",
+                    "File Explorer",
+                    "WordPad",
+                    "Voice Recorder",
+                    "Camera",
+                    "Media Player",
+                    "Back"
                 ]));
         
         try
         {
             switch (tool)
             {
-                case "💻 Command Prompt":
+                case "Command Prompt":
                     RunWithAnimation("cmd.exe", "Starting Command Prompt...");
                     break;
-                case "🐚 PowerShell":
+                case "PowerShell":
                     RunWithAnimation("powershell.exe", "Starting PowerShell...");
                     break;
-                case "🪟 Windows Terminal":
+                case "Windows Terminal":
                     RunWithAnimation("wt.exe", "Starting Windows Terminal...");
                     break;
-                case "📝 Notepad":
+                case "Notepad":
                     RunWithAnimation("notepad.exe", "Starting Notepad...");
                     break;
-                case "🖼️ Paint":
+                case "Paint":
                     RunWithAnimation("mspaint.exe", "Starting Paint...");
                     break;
-                case "🧮 Calculator":
+                case "Calculator":
                     RunWithAnimation("calc.exe", "Starting Calculator...");
                     break;
-                case "📁 File Explorer":
+                case "File Explorer":
                     RunWithAnimation("explorer.exe", "Starting File Explorer...");
                     break;
-                case "📚 WordPad":
+                case "WordPad":
                     RunWithAnimation("write.exe", "Starting WordPad...");
                     break;
-                case "🎤 Voice Recorder":
+                case "Voice Recorder":
                     RunWithAnimation("soundrecorder.exe", "Starting Voice Recorder...");
                     break;
-                case "📷 Camera":
+                case "Camera":
                     RunWithAnimation("microsoft.windows.camera:", "Starting Camera...", useShell: true);
                     break;
-                case "🎵 Media Player":
+                case "Media Player":
                     RunWithAnimation("wmplayer.exe", "Starting Media Player...");
                     break;
-                case "🔙 Back":
+                case "Back":
                     return;
             }
             
-            AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]✓ {tool.Replace("🔙 Back", "")} launched successfully![/]");
+            AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]✓ {tool.Replace("Back", "")} launched successfully![/]");
         }
         catch (Exception ex)
         {
@@ -139,66 +139,66 @@ class OpenProgram
                 .Title($"[{GraphicSettings.SecondaryColor}]Administrative Tools[/]")
                 .PageSize(GraphicSettings.PageSize)
                 .AddChoices([
-                    "⚡ Task Manager",
-                    "🔐 Registry Editor",
-                    "💾 Disk Management",
-                    "🖥️ Computer Management",
-                    "🔧 Device Manager",
-                    "📊 Services",
-                    "📈 Performance Monitor",
-                    "📅 Event Viewer",
-                    "⏰ Task Scheduler",
-                    "👥 Local Users & Groups",
-                    "🔒 Local Security Policy",
-                    "📋 System Configuration",
-                    "💿 Disk Cleanup",
-                    "🔙 Back"
+                    "Task Manager",
+                    "egistry Editor",
+                    "Disk Management",
+                    "Computer Management",
+                    "Device Manager",
+                    "Services",
+                    "Performance Monitor",
+                    "Event Viewer",
+                    "Task Scheduler",
+                    "Local Users & Groups",
+                    "Local Security Policy",
+                    "System Configuration",
+                    "Disk Cleanup",
+                    "Back"
                 ]));
         
         try
         {
             switch (tool)
             {
-                case "⚡ Task Manager":
+                case "Task Manager":
                     RunWithAnimation("taskmgr.exe", "Starting Task Manager...");
                     break;
-                case "🔐 Registry Editor":
+                case "Registry Editor":
                     RunWithAnimation("regedit.exe", "Starting Registry Editor...");
                     break;
-                case "💾 Disk Management":
+                case "Disk Management":
                     RunWithAnimation("mmc.exe", "diskmgmt.msc", "Starting Disk Management...");
                     break;
-                case "🖥️ Computer Management":
+                case "Computer Management":
                     RunWithAnimation("mmc.exe", "compmgmt.msc", "Starting Computer Management...");
                     break;
-                case "🔧 Device Manager":
+                case "Device Manager":
                     RunWithAnimation("mmc.exe", "devmgmt.msc", "Starting Device Manager...");
                     break;
-                case "📊 Services":
+                case "Services":
                     RunWithAnimation("mmc.exe", "services.msc", "Starting Services...");
                     break;
-                case "📈 Performance Monitor":
+                case "Performance Monitor":
                     RunWithAnimation("mmc.exe", "perfmon.msc", "Starting Performance Monitor...");
                     break;
-                case "📅 Event Viewer":
+                case "Event Viewer":
                     RunWithAnimation("mmc.exe", "eventvwr.msc", "Starting Event Viewer...");
                     break;
-                case "⏰ Task Scheduler":
+                case "Task Scheduler":
                     RunWithAnimation("taskschd.msc", "", "Starting Task Scheduler...");
                     break;
-                case "👥 Local Users & Groups":
+                case "Local Users & Groups":
                     RunWithAnimation("mmc.exe", "lusrmgr.msc", "Starting Local Users & Groups...");
                     break;
-                case "🔒 Local Security Policy":
+                case "Local Security Policy":
                     RunWithAnimation("secpol.msc", "", "Starting Local Security Policy...");
                     break;
-                case "📋 System Configuration":
+                case "System Configuration":
                     RunWithAnimation("msconfig.exe", "Starting System Configuration...");
                     break;
-                case "💿 Disk Cleanup":
+                case "Disk Cleanup":
                     RunWithAnimation("cleanmgr.exe", "Starting Disk Cleanup...");
                     break;
-                case "🔙 Back":
+                case "Back":
                     return;
             }
             
@@ -225,66 +225,66 @@ class OpenProgram
                 .Title($"[{GraphicSettings.SecondaryColor}]Control Panel Items[/]")
                 .PageSize(GraphicSettings.PageSize)
                 .AddChoices([
-                    "⚙️ Control Panel",
-                    "🔧 Programs & Features",
-                    "🛡️ Windows Defender Firewall",
-                    "🖥️ Display Settings",
-                    "🔊 Sound Settings",
-                    "🌐 Internet Options",
-                    "🔑 User Accounts",
-                    "⏰ Date & Time",
-                    "🔋 Power Options",
-                    "🗺️ Region & Language",
-                    "📡 Network Connections",
-                    "🖨️ Devices & Printers",
-                    "🔒 Security & Maintenance",
-                    "🔙 Back"
+                    "Control Panel",
+                    "Programs & Features",
+                    "Windows Defender Firewall",
+                    "Display Settings",
+                    "Sound Settings",
+                    "Internet Options",
+                    "User Accounts",
+                    "Date & Time",
+                    "Power Options",
+                    "Region & Language",
+                    "Network Connections",
+                    "Devices & Printers",
+                    "Security & Maintenance",
+                    "Back"
                 ]));
         
         try
         {
             switch (panelItem)
             {
-                case "⚙️ Control Panel":
+                case "Control Panel":
                     RunWithAnimation("control.exe", "Opening Control Panel...");
                     break;
-                case "🔧 Programs & Features":
+                case "Programs & Features":
                     RunWithAnimation("control.exe", "appwiz.cpl", "Opening Programs & Features...");
                     break;
-                case "🛡️ Windows Defender Firewall":
+                case "Windows Defender Firewall":
                     RunWithAnimation("control.exe", "firewall.cpl", "Opening Windows Defender Firewall...");
                     break;
-                case "🖥️ Display Settings":
+                case "Display Settings":
                     RunWithAnimation("control.exe", "desk.cpl", "Opening Display Settings...");
                     break;
-                case "🔊 Sound Settings":
+                case "Sound Settings":
                     RunWithAnimation("control.exe", "mmsys.cpl", "Opening Sound Settings...");
                     break;
-                case "🌐 Internet Options":
+                case "Internet Options":
                     RunWithAnimation("control.exe", "inetcpl.cpl", "Opening Internet Options...");
                     break;
-                case "🔑 User Accounts":
+                case "User Accounts":
                     RunWithAnimation("control.exe", "nusrmgr.cpl", "Opening User Accounts...");
                     break;
-                case "⏰ Date & Time":
+                case "Date & Time":
                     RunWithAnimation("control.exe", "timedate.cpl", "Opening Date & Time...");
                     break;
-                case "🔋 Power Options":
+                case "Power Options":
                     RunWithAnimation("control.exe", "powercfg.cpl", "Opening Power Options...");
                     break;
-                case "🗺️ Region & Language":
+                case "Region & Language":
                     RunWithAnimation("control.exe", "intl.cpl", "Opening Region & Language...");
                     break;
-                case "📡 Network Connections":
+                case "Network Connections":
                     RunWithAnimation("control.exe", "ncpa.cpl", "Opening Network Connections...");
                     break;
-                case "🖨️ Devices & Printers":
+                case "Devices & Printers":
                     RunWithAnimation("control.exe", "printers", "Opening Devices & Printers...");
                     break;
-                case "🔒 Security & Maintenance":
+                case "Security & Maintenance":
                     RunWithAnimation("control.exe", "wscui.cpl", "Opening Security & Maintenance...");
                     break;
-                case "🔙 Back":
+                case "Back":
                     return;
             }
             
@@ -307,58 +307,58 @@ class OpenProgram
                 .Title($"[{GraphicSettings.SecondaryColor}]Development Tools[/]")
                 .PageSize(GraphicSettings.PageSize)
                 .AddChoices([
-                    "📦 Visual Studio Installer",
-                    "🔧 Visual Studio Code",
-                    "☁️ Azure Data Studio",
-                    "🐙 GitHub Desktop",
-                    "🐍 Python",
-                    "☕ Java",
-                    "🐘 PostgreSQL",
-                    "🐬 MySQL",
-                    "🔍 Everything (Search)",
-                    "📏 Notepad++",
-                    "🔄 Git Bash",
-                    "🔙 Back"
+                    "Visual Studio Installer",
+                    "Visual Studio Code",
+                    "Azure Data Studio",
+                    "GitHub Desktop",
+                    "Python",
+                    "Java",
+                    "PostgreSQL",
+                    "MySQL",
+                    "Everything (Search)",
+                    "Notepad++",
+                    "Git Bash",
+                    "Back"
                 ]));
         
         try
         {
             switch (tool)
             {
-                case "📦 Visual Studio Installer":
+                case "Visual Studio Installer":
                     RunWithAnimation("vs_installer.exe", "Starting Visual Studio Installer...");
                     break;
-                case "🔧 Visual Studio Code":
+                case "Visual Studio Code":
                     RunWithAnimation("code.exe", "Starting Visual Studio Code...");
                     break;
-                case "☁️ Azure Data Studio":
+                case "Azure Data Studio":
                     RunWithAnimation("azuredatastudio", "Starting Azure Data Studio...");
                     break;
-                case "🐙 GitHub Desktop":
+                case "GitHub Desktop":
                     RunWithAnimation("github", "Starting GitHub Desktop...");
                     break;
-                case "🐍 Python":
+                case "Python":
                     RunWithAnimation("python.exe", "Starting Python...");
                     break;
-                case "☕ Java":
+                case "Java":
                     RunWithAnimation("javaw.exe", "Starting Java...");
                     break;
-                case "🐘 PostgreSQL":
+                case "PostgreSQL":
                     RunWithAnimation("pgadmin4", "Starting PostgreSQL...");
                     break;
-                case "🐬 MySQL":
+                case "MySQL":
                     RunWithAnimation("mysql", "Starting MySQL...");
                     break;
-                case "🔍 Everything (Search)":
+                case "Everything (Search)":
                     RunWithAnimation("everything.exe", "Starting Everything Search...");
                     break;
-                case "📏 Notepad++":
+                case "Notepad++":
                     RunWithAnimation("notepad++.exe", "Starting Notepad++...");
                     break;
-                case "🔄 Git Bash":
+                case "Git Bash":
                     RunWithAnimation("git-bash.exe", "Starting Git Bash...");
                     break;
-                case "🔙 Back":
+                case "Back":
                     return;
             }
             
@@ -382,66 +382,66 @@ class OpenProgram
                 .Title($"[{GraphicSettings.SecondaryColor}]Internet & Network Tools[/]")
                 .PageSize(GraphicSettings.PageSize)
                 .AddChoices([
-                    "🌐 Default Browser",
-                    "🔧 Internet Properties",
-                    "📡 Network Settings",
-                    "📶 Wi-Fi Settings",
-                    "🔄 IP Configuration",
-                    "📊 Network Statistics",
-                    "🔒 Windows Defender Security",
-                    "🔄 Windows Update",
-                    "📧 Mail",
-                    "💬 Microsoft Teams",
-                    "📞 Skype",
-                    "🔙 Back"
+                    "Default Browser",
+                    "Internet Properties",
+                    "Network Settings",
+                    "Wi-Fi Settings",
+                    "IP Configuration",
+                    "Network Statistics",
+                    "Windows Defender Security",
+                    "Windows Update",
+                    "Mail",
+                    "Microsoft Teams",
+                    "Skype",
+                    "Back"
                 ]));
         
         try
         {
             switch (tool)
             {
-                case "🌐 Default Browser":
+                case "Default Browser":
                     Process.Start(new ProcessStartInfo("http://google.com") { UseShellExecute = true });
                     AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]✓ Opening default browser...[/]");
                     break;
-                case "🔧 Internet Properties":
+                case "Internet Properties":
                     RunWithAnimation("inetcpl.cpl", "", "Opening Internet Properties...");
                     break;
-                case "📡 Network Settings":
+                case "Network Settings":
                     Process.Start(new ProcessStartInfo("ms-settings:network") { UseShellExecute = true });
                     AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]✓ Opening Network Settings...[/]");
                     break;
-                case "📶 Wi-Fi Settings":
+                case "Wi-Fi Settings":
                     Process.Start(new ProcessStartInfo("ms-settings:network-wifi") { UseShellExecute = true });
                     AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]✓ Opening Wi-Fi Settings...[/]");
                     break;
-                case "🔄 IP Configuration":
+                case "IP Configuration":
                     RunCommandWithOutput("ipconfig", "/all");
                     break;
-                case "📊 Network Statistics":
+                case "Network Statistics":
                     RunCommandWithOutput("netstat", "-ano");
                     break;
-                case "🔒 Windows Defender Security":
+                case "Windows Defender Security":
                     Process.Start(new ProcessStartInfo("windowsdefender://") { UseShellExecute = true });
                     AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]✓ Opening Windows Defender Security...[/]");
                     break;
-                case "🔄 Windows Update":
+                case "Windows Update":
                     Process.Start(new ProcessStartInfo("ms-settings:windowsupdate") { UseShellExecute = true });
                     AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]✓ Opening Windows Update...[/]");
                     break;
-                case "📧 Mail":
+                case "Mail":
                     Process.Start(new ProcessStartInfo("outlookmail:") { UseShellExecute = true });
                     AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]✓ Opening Mail...[/]");
                     break;
-                case "💬 Microsoft Teams":
+                case "Microsoft Teams":
                     Process.Start(new ProcessStartInfo("msteams:") { UseShellExecute = true });
                     AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]✓ Opening Microsoft Teams...[/]");
                     break;
-                case "📞 Skype":
+                case "Skype":
                     Process.Start(new ProcessStartInfo("skype:") { UseShellExecute = true });
                     AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]✓ Opening Skype...[/]");
                     break;
-                case "🔙 Back":
+                case "Back":
                     return;
             }
         }
@@ -466,9 +466,9 @@ class OpenProgram
             new SelectionPrompt<string>()
                 .Title($"[{GraphicSettings.SecondaryColor}]How would you like to open a file?[/]")
                 .AddChoices([
-                    "📁 Enter Full Path",
-                    "🔍 Browse File",
-                    "🔙 Back"
+                    "Enter Full Path",
+                    "Browse File",
+                    "Back"
                 ]));
         
         if (choice == "🔙 Back") return;
@@ -477,7 +477,7 @@ class OpenProgram
         {
             string path = "";
             
-            if (choice == "📁 Enter Full Path")
+            if (choice == "Enter Full Path")
             {
                 path = AnsiConsole.Prompt(
                     new TextPrompt<string>($"[{GraphicSettings.SecondaryColor}]Enter full path to file:[/]")
@@ -503,7 +503,7 @@ class OpenProgram
                     }
                 }
             }
-            else if (choice == "🔍 Browse File")
+            else if (choice == "Browse File")
             {
                 AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]Please enter path manually or drag-and-drop file here:[/]");
                 path = Console.ReadLine()?.Trim('"');

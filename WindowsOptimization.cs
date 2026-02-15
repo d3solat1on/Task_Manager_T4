@@ -161,8 +161,7 @@ class WindowsOptimization : Other
             }
         }
     }
-
-    public static void UninstallSystemApps()
+    private static void UninstallSystemApps()
     {
         Console.Clear();
         AnsiConsole.Write(new Rule($"[{GraphicSettings.SecondaryColor}]UNINSTALL_SYSTEM_APPS[/]").RuleStyle(GraphicSettings.AccentColor).LeftJustified());
@@ -194,7 +193,7 @@ class WindowsOptimization : Other
         Console.ReadKey();
     }
 
-    public static void DisableVisualEffects()
+    private static void DisableVisualEffects()
     {
         Console.Clear();
         AnsiConsole.Write(new Rule($"[{GraphicSettings.SecondaryColor}]DISABLE_VISUAL_EFFECTS[/]").RuleStyle(GraphicSettings.AccentColor).LeftJustified());
@@ -235,7 +234,7 @@ class WindowsOptimization : Other
             Console.ReadKey();
         }
     }
-    public static void RemoveAllStartupPrograms()
+    private static void RemoveAllStartupPrograms()
     {
         string[] registryKeys = [
             @"Software\Microsoft\Windows\CurrentVersion\Run",
@@ -291,7 +290,7 @@ class WindowsOptimization : Other
         AnsiConsole.MarkupLine($"[{GraphicSettings.NeutralColor}]Press any key to return.[/]");
         Console.ReadKey();
     }
-    public static void EnableUltimatePerformance()
+    private static void EnableUltimatePerformance()
     {
         string schemaId = "e9a42b02-d5df-448d-aa00-03f14749eb61";
 
@@ -309,7 +308,7 @@ class WindowsOptimization : Other
         Console.ReadKey();
     }
 
-    public static void ClearEventLogs()
+    private static void ClearEventLogs()
     {
         AnsiConsole.Status().Start("Очистка журналов событий...", ctx =>
         {
@@ -330,7 +329,7 @@ class WindowsOptimization : Other
         Console.ReadKey();
     }
 
-    public static void ResetNetworkStack()
+    private static void ResetNetworkStack()
     {
         AnsiConsole.Status().Start("Сброс сетевого стека...", ctx =>
         {

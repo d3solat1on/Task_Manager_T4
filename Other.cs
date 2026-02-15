@@ -1,9 +1,7 @@
-//доделать 
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.DirectoryServices.AccountManagement;
-using System.IO;
 using System.Linq;
 using System.Security.Principal;
 using System.ServiceProcess;
@@ -23,28 +21,28 @@ public class Other
 
             var choice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
-                    .Title($"[{GraphicSettings.SecondaryColor}]🔧 Additional Tools[/]")
+                    .Title($"[{GraphicSettings.SecondaryColor}]Additional Tools[/]")
                     .PageSize(GraphicSettings.PageSize)
                     .AddChoices(
                     [
-                        "⌨️  Fix Keyboard Issues",
-                        "👥 User Management",
-                        "🛡️  Run as Administrator",
-                        "🔙 Back to Main Menu"
+                        "Fix Keyboard Issues",
+                        "User Management",
+                        "Run as Administrator",
+                        "Back to Main Menu"
                     ]));
 
             switch (choice)
             {
-                case "⌨️  Fix Keyboard Issues":
+                case "Fix Keyboard Issues":
                     Keyboard.FixKeyboard();
                     break;
-                case "👥 User Management":
+                case "User Management":
                     Users.SettingsUser();
                     break;
-                case "🛡️  Run as Administrator":
+                case "Run as Administrator":
                     RunAsAdmin();
                     break;
-                case "🔙 Back to Main Menu":
+                case "Back to Main Menu":
                     Console.Clear();
                     return;
             }
@@ -63,8 +61,8 @@ public class Other
             }
 
             AnsiConsole.Write(
-                new Panel("[bold red]⚠  WARNING: Keyboard Fix Utility[/]")
-                    .BorderColor(Color.White)
+                new Panel("[bold red]WARNING: Keyboard Fix Utility[/]")
+                    .BorderColor(GraphicSettings.GetThemeColor)
                     .Padding(1, 1));
 
             AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]This tool attempts to fix common keyboard issues.[/]");
@@ -227,7 +225,7 @@ public class Other
         private static void ShowResultPanel()
         {
             var panel = new Panel(
-                $"[{GraphicSettings.SecondaryColor}]🎯 KEYBOARD FIX COMPLETE[/]\n\n" +
+                $"[{GraphicSettings.SecondaryColor}]KEYBOARD FIX COMPLETE[/]\n\n" +
                 $"[{GraphicSettings.SecondaryColor}]Recommended actions:[/]\n" +
                 $"1. [{GraphicSettings.SecondaryColor}]Test your keyboard now[/]\n" +
                 $"2. [{GraphicSettings.SecondaryColor}]Restart computer if issues persist[/]\n" +
@@ -237,7 +235,7 @@ public class Other
                 $"[{GraphicSettings.NeutralColor}]Note: Some fixes require system restart.[/]")
             {
                 Border = BoxBorder.Double,
-                BorderStyle = new Style(Color.DarkOrange),
+                BorderStyle = new Style(GraphicSettings.GetThemeColor),
                 Padding = new Padding(2, 1, 2, 1)
             };
 
@@ -265,36 +263,36 @@ public class Other
                         .PageSize(GraphicSettings.PageSize)
                         .AddChoices(
                         [
-                            "📋 List All Users",
-                            "➕ Create New User",
-                            "🗑️  Delete User",
-                            "🔒 Change User Password",
-                            "👑 Add User to Administrators",
-                            "📊 User Information",
-                            "🔙 Back"
+                            "List All Users",
+                            "Create New User",
+                            "Delete User",
+                            "Change User Password",
+                            "Add User to Administrators",
+                            "User Information",
+                            "Back"
                         ]));
 
                 switch (choice)
                 {
-                    case "📋 List All Users":
+                    case "List All Users":
                         PrintAllUsers();
                         break;
-                    case "➕ Create New User":
+                    case "Create New User":
                         CreateNewUser();
                         break;
-                    case "🗑️  Delete User":
+                    case "Delete User":
                         DeleteUser();
                         break;
-                    case "🔒 Change User Password":
+                    case "Change User Password":
                         ChangeUserPassword();
                         break;
-                    case "👑 Add User to Administrators":
+                    case "Add User to Administrators":
                         AddUserToAdminGroup();
                         break;
-                    case "📊 User Information":
+                    case "User Information":
                         ShowUserInfo();
                         break;
-                    case "🔙 Back":
+                    case "Back":
                         return;
                 }
 
@@ -646,37 +644,6 @@ public class Other
                 }
 
                 AnsiConsole.Write(grid);
-            }
-            catch { }
-        }
-
-        private static void AddUserToGroup(string username, string groupName)
-        {
-            try
-            {
-                var command = $"/c net localgroup \"{groupName}\" \"{username}\" /add";
-                Process.Start(new ProcessStartInfo
-                {
-                    FileName = "cmd.exe",
-                    Arguments = command,
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                    Verb = "runas"
-                })?.WaitForExit();
-            }
-            catch { }
-        }
-
-        private static void CreateUserFolder(string username)
-        {
-            try
-            {
-                string userFolder = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                    username);
-
-                Directory.CreateDirectory(userFolder);
-                AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]✅ Created folder: {userFolder}[/]");
             }
             catch { }
         }

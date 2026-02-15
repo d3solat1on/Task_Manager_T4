@@ -69,45 +69,49 @@ internal class Program
                     .MoreChoicesText($"[{GraphicSettings.NeutralColor}](Move up and down to reveal more options)[/]")
                     .AddChoices(
                     [
-                        "📊 Process Management",
-                        "🔧 Service Manager",
-                        "⚡ Startup Manager",
-                        "💻 System Information",
-                        "⚙️ Drives",
+                        "Process Management",
+                        "Service Manager",
+                        "Privacy settings",
+                        "Startup Manager",
+                        "System Information",
+                        "Drives",
                         "Registry",
-                        "🖥️ Show System Load",
-                        "🌡️ Check Temperature",
-                        "🔩 Benchmark",
-                        "🚀 Program Launcher",
+                        "Show System Load",
+                        "Check Temperature",
+                        "Benchmark",
+                        "Program Launcher",
                         "File and folder manager",
                         "Program Manager",
                         "Network",
                         "Windows Optimization",
-                        "❔ Other",
+                        "Other",
                         "Graphic Settings",
-                        "🎨 OpenMe",
-                        "❌ Exit"
+                        "OpenMe",
+                        "Exit"
                     ]));
 
             switch (choice)
             {
+                case "Privacy settings":
+                    EnablingPrivacy.ShowPrivacyMenu();
+                    break;
                 case "Windows Optimization":
                     WindowsOptimization.MainMenuOptimization();
                     break;
-                case "📊 Process Management":
+                case "Process Management":
                     Process_management.GetProcces();
                     break;
-                case "💻 System Information":
+                case "System Information":
                     GetInfoPc.Main_Information_Collection();
                     break;
-                case "🚀 Program Launcher":
+                case "Program Launcher":
                     OpenProgram.OpenPrograms();
                     break;
-                case "🖥️ Show System Load":
+                case "Show System Load":
                     ShowSystemLoad();
                     Console.Clear();
                     break;
-                case "⚡ Startup Manager":
+                case "Startup Manager":
                     try
                     {
                         StartUpManager startupManager = new();
@@ -119,24 +123,24 @@ internal class Program
                         Console.ReadKey();
                     }
                     break;
-                case "🌡️ Check Temperature":
+                case "Check Temperature":
                     AdvancedTemperatureMonitor.ShowAllTemperatures();
                     Console.Clear();
                     break;
-                case "🔧 Service Manager":
+                case "Service Manager":
                     ServiceManagerUI.ShowServicesMenu();
                     break;
-                case "❔ Other":
+                case "Other":
                     Other.PrintAllOtherFunctions();
                     Console.Clear();
                     break;
-                case "⚙️ Drives":
+                case "Drives":
                     DriveManager.Main_Menu_Drives();
                     break;
-                case "🔩 Benchmark":
+                case "Benchmark":
                     await SystemBenchmark.ShowBenchmarkMenu(); //che za huynya 
                     break;
-                case "🎨 OpenMe":
+                case "OpenMe":
                     Rain.ShowReadMeWithRain();
                     Console.Clear();
                     break;
@@ -157,7 +161,7 @@ internal class Program
                 case "Network":
                     await NetWork.MainMenuNetWork();
                     break;          
-                case "❌ Exit":
+                case "Exit":
                     Environment.Exit(0);
                     break;
             }

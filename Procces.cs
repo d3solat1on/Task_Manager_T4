@@ -21,48 +21,48 @@ class Process_management
                     .Title($"[{GraphicSettings.SecondaryColor}]Select category[/]")
                     .PageSize(GraphicSettings.PageSize)
                     .AddChoices([
-                        "📋 Show All Processes",
-                        "🔍 Find Process by Name",
-                        "⚡ Show System Processes",
-                        "❌ Kill Process by ID",
-                        "🗑️ Kill Process by Name",
-                        "🚀 Start New Process",
-                        "ℹ️ Show Process Details",
-                        "💾 Export Processes to File",
-                        "🧹 Clean Dead Processes",
-                        "🔙 Back to Main Menu"
+                        "Show All Processes",
+                        "Find Process by Name",
+                        "Show System Processes",
+                        "Kill Process by ID",
+                        "Kill Process by Name",
+                        "Start New Process",
+                        "Show Process Details",
+                        "Export Processes to File",
+                        "Clean Dead Processes",
+                        "Back to Main Menu"
                     ]));
             
             switch (choice)
             {
-                case "📋 Show All Processes":
+                case "Show All Processes":
                     ShowAllProcessesSpectre();
                     break;
-                case "🔍 Find Process by Name":
+                case "Find Process by Name":
                     FindProcessByNameSpectre();
                     break;
-                case "⚡ Show System Processes":
+                case "Show System Processes":
                     ShowSystemProcessesSpectre();
                     break;
-                case "❌ Kill Process by ID":
+                case "Kill Process by ID":
                     KillProcessByIdSpectre();
                     break;
-                case "🗑️ Kill Process by Name":
+                case "Kill Process by Name":
                     KillProcessByNameSpectre();
                     break;
-                case "🚀 Start New Process":
+                case "Start New Process":
                     StartNewProcessSpectre();
                     break;
-                case "ℹ️ Show Process Details":
+                case "Show Process Details":
                     ShowProcessInfoSpectre();
                     break;
-                case "💾 Export Processes to File":
+                case "Export Processes to File":
                     ExportProcessesToFileSpectre();
                     break;
-                case "🧹 Clean Dead Processes":
+                case "Clean Dead Processes":
                     CleanDeadProcessesSpectre();
                     break;
-                case "🔙 Back to Main Menu":
+                case "Back to Main Menu":
                     Console.Clear();
                     return;
                 case "RemoveCritProcess":

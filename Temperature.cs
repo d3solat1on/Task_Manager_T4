@@ -27,7 +27,7 @@ public class AdvancedTemperatureMonitor
         Initialize();
         
         var table = new Table()
-            .Title($"[{GraphicSettings.SecondaryColor}]🌡️ Hardware Temperatures[/]")
+            .Title($"[{GraphicSettings.SecondaryColor}]Hardware Temperatures[/]")
             .BorderColor(GraphicSettings.GetThemeColor)
             .Border(TableBorder.Rounded)
             .AddColumn(new TableColumn($"[{GraphicSettings.SecondaryColor}]Hardware[/]").LeftAligned())
@@ -74,7 +74,7 @@ public class AdvancedTemperatureMonitor
         
         if (table.Rows.Count == 0)
         {
-            AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]]⚠ Реальные датчики температуры не найдены.[/]");
+            AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]]Реальные датчики температуры не найдены.[/]");
             AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]Убедитесь, что программа запущена от имени АДМИНИСТРАТОРА.[/]");
         }
         else
