@@ -22,8 +22,6 @@ class OpenProgram
                         "System Tools",
                         "Administrative Tools", 
                         "Control Panel",
-                        "Development Tools",
-                        "Internet & Network",
                         "Custom File/Path",
                         "Back to Main Menu"
                     ]));
@@ -38,12 +36,6 @@ class OpenProgram
                     break;
                 case "Control Panel":
                     OpenControlPanel();
-                    break;
-                case "Development Tools":
-                    OpenDevelopmentTools();
-                    break;
-                case "Internet & Network":
-                    OpenInternetTools();
                     break;
                 case "Custom File/Path":
                     OpenCustomFile();
@@ -140,7 +132,7 @@ class OpenProgram
                 .PageSize(GraphicSettings.PageSize)
                 .AddChoices([
                     "Task Manager",
-                    "egistry Editor",
+                    "Registry Editor",
                     "Disk Management",
                     "Computer Management",
                     "Device Manager",
@@ -297,162 +289,6 @@ class OpenProgram
         
         WaitForContinue();
     }
-    
-    private static void OpenDevelopmentTools()
-    {
-        Console.Clear();
-        
-        var tool = AnsiConsole.Prompt(
-            new SelectionPrompt<string>()
-                .Title($"[{GraphicSettings.SecondaryColor}]Development Tools[/]")
-                .PageSize(GraphicSettings.PageSize)
-                .AddChoices([
-                    "Visual Studio Installer",
-                    "Visual Studio Code",
-                    "Azure Data Studio",
-                    "GitHub Desktop",
-                    "Python",
-                    "Java",
-                    "PostgreSQL",
-                    "MySQL",
-                    "Everything (Search)",
-                    "Notepad++",
-                    "Git Bash",
-                    "Back"
-                ]));
-        
-        try
-        {
-            switch (tool)
-            {
-                case "Visual Studio Installer":
-                    RunWithAnimation("vs_installer.exe", "Starting Visual Studio Installer...");
-                    break;
-                case "Visual Studio Code":
-                    RunWithAnimation("code.exe", "Starting Visual Studio Code...");
-                    break;
-                case "Azure Data Studio":
-                    RunWithAnimation("azuredatastudio", "Starting Azure Data Studio...");
-                    break;
-                case "GitHub Desktop":
-                    RunWithAnimation("github", "Starting GitHub Desktop...");
-                    break;
-                case "Python":
-                    RunWithAnimation("python.exe", "Starting Python...");
-                    break;
-                case "Java":
-                    RunWithAnimation("javaw.exe", "Starting Java...");
-                    break;
-                case "PostgreSQL":
-                    RunWithAnimation("pgadmin4", "Starting PostgreSQL...");
-                    break;
-                case "MySQL":
-                    RunWithAnimation("mysql", "Starting MySQL...");
-                    break;
-                case "Everything (Search)":
-                    RunWithAnimation("everything.exe", "Starting Everything Search...");
-                    break;
-                case "Notepad++":
-                    RunWithAnimation("notepad++.exe", "Starting Notepad++...");
-                    break;
-                case "Git Bash":
-                    RunWithAnimation("git-bash.exe", "Starting Git Bash...");
-                    break;
-                case "Back":
-                    return;
-            }
-            
-            AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]✓ {tool.Replace("🔙 Back", "")} launched successfully![/]");
-        }
-        catch (Exception ex)
-        {
-            ShowError($"Failed to launch {tool}: {ex.Message}");
-            AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]Note: Some tools may need to be installed first.[/]");
-        }
-        
-        WaitForContinue();
-    }
-    
-    private static void OpenInternetTools()
-    {
-        Console.Clear();
-        
-        var tool = AnsiConsole.Prompt(
-            new SelectionPrompt<string>()
-                .Title($"[{GraphicSettings.SecondaryColor}]Internet & Network Tools[/]")
-                .PageSize(GraphicSettings.PageSize)
-                .AddChoices([
-                    "Default Browser",
-                    "Internet Properties",
-                    "Network Settings",
-                    "Wi-Fi Settings",
-                    "IP Configuration",
-                    "Network Statistics",
-                    "Windows Defender Security",
-                    "Windows Update",
-                    "Mail",
-                    "Microsoft Teams",
-                    "Skype",
-                    "Back"
-                ]));
-        
-        try
-        {
-            switch (tool)
-            {
-                case "Default Browser":
-                    Process.Start(new ProcessStartInfo("http://google.com") { UseShellExecute = true });
-                    AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]✓ Opening default browser...[/]");
-                    break;
-                case "Internet Properties":
-                    RunWithAnimation("inetcpl.cpl", "", "Opening Internet Properties...");
-                    break;
-                case "Network Settings":
-                    Process.Start(new ProcessStartInfo("ms-settings:network") { UseShellExecute = true });
-                    AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]✓ Opening Network Settings...[/]");
-                    break;
-                case "Wi-Fi Settings":
-                    Process.Start(new ProcessStartInfo("ms-settings:network-wifi") { UseShellExecute = true });
-                    AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]✓ Opening Wi-Fi Settings...[/]");
-                    break;
-                case "IP Configuration":
-                    RunCommandWithOutput("ipconfig", "/all");
-                    break;
-                case "Network Statistics":
-                    RunCommandWithOutput("netstat", "-ano");
-                    break;
-                case "Windows Defender Security":
-                    Process.Start(new ProcessStartInfo("windowsdefender://") { UseShellExecute = true });
-                    AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]✓ Opening Windows Defender Security...[/]");
-                    break;
-                case "Windows Update":
-                    Process.Start(new ProcessStartInfo("ms-settings:windowsupdate") { UseShellExecute = true });
-                    AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]✓ Opening Windows Update...[/]");
-                    break;
-                case "Mail":
-                    Process.Start(new ProcessStartInfo("outlookmail:") { UseShellExecute = true });
-                    AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]✓ Opening Mail...[/]");
-                    break;
-                case "Microsoft Teams":
-                    Process.Start(new ProcessStartInfo("msteams:") { UseShellExecute = true });
-                    AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]✓ Opening Microsoft Teams...[/]");
-                    break;
-                case "Skype":
-                    Process.Start(new ProcessStartInfo("skype:") { UseShellExecute = true });
-                    AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]✓ Opening Skype...[/]");
-                    break;
-                case "Back":
-                    return;
-            }
-        }
-        catch (Exception ex)
-        {
-            ShowError($"Failed to open {tool}: {ex.Message}");
-        }
-        
-        WaitForContinue();
-    }
-    
     private static void OpenCustomFile()
     {
         Console.Clear();

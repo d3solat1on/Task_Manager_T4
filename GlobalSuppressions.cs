@@ -37,7 +37,6 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Interoperability", "CA1416:Проверка совместимости платформы", Justification = "<Ожидание>", Scope = "member", Target = "~M:StartUpManager.ShowRegistryStartupTable")]
 [assembly: SuppressMessage("Interoperability", "CA1416:Проверка совместимости платформы", Justification = "<Ожидание>", Scope = "member", Target = "~M:StartUpManager.ShowStartupStatistics")]
 [assembly: SuppressMessage("Interoperability", "CA1416:Проверка совместимости платформы", Justification = "<Ожидание>", Scope = "member", Target = "~M:Task_Manager_T4.DriveManager.ShowDriverTable(System.String,System.String,System.String)")]
-[assembly: SuppressMessage("Interoperability", "CA1416:Проверка совместимости платформы", Justification = "<Ожидание>", Scope = "member", Target = "~M:Program.ShowSystemLoad")]
 [assembly: SuppressMessage("Interoperability", "CA1416:Проверка совместимости платформы", Justification = "<Ожидание>", Scope = "member", Target = "~M:Task_Manager_T4.ServiceManagerUI.GetAutomaticServicesCount~System.Int32")]
 [assembly: SuppressMessage("Interoperability", "CA1416:Проверка совместимости платформы", Justification = "<Ожидание>", Scope = "member", Target = "~M:Task_Manager_T4.ServiceManagerUI.GetServiceMemoryUsage(System.String)~System.Int64")]
 [assembly: SuppressMessage("Interoperability", "CA1416:Проверка совместимости платформы", Justification = "<Ожидание>", Scope = "member", Target = "~M:Task_Manager_T4.ServiceManagerUI.GetStartupType(System.String)~System.String")]
@@ -60,3 +59,5 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Interoperability", "CA1416:Проверка совместимости платформы", Justification = "<Ожидание>", Scope = "member", Target = "~M:Task_Manager_T4.InfoPC.MonitorsInfo(System.IO.StreamWriter)")]
 [assembly: SuppressMessage("Interoperability", "CA1416:Проверка совместимости платформы", Justification = "<Ожидание>", Scope = "member", Target = "~M:Task_Manager_T4.InfoPC.SecurityInfo(System.IO.StreamWriter)")]
 [assembly: SuppressMessage("Interoperability", "CA1416:Проверка совместимости платформы", Justification = "<Ожидание>", Scope = "member", Target = "~M:Task_Manager_T4.InfoPC.StorageInfo(System.IO.StreamWriter)")]
+[assembly: SuppressMessage("Interoperability", "CA1416:Проверка совместимости платформы", Justification = "<Ожидание>", Scope = "member", Target = "~M:Task_Manager_T4.InfoPC.MonitorsInfoDetailed(System.IO.StreamWriter)")]
+[assembly: SuppressMessage("Interoperability", "CA1416:Проверка совместимости платформы", Justification = "<Ожидание>", Scope = "member", Target = "~M:Load.ShowSystemLoad")]

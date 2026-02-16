@@ -133,13 +133,13 @@ public class Other
                 if (Console.KeyAvailable)
                 {
                     Console.ReadKey(true);
-                    AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]✅ Key detected![/]");
+                    AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]Key detected![/]");
                     return true;
                 }
                 Thread.Sleep(100);
             }
 
-            AnsiConsole.MarkupLine("\n[red]⚠ No keypress detected.[/]");
+            AnsiConsole.MarkupLine("\n[red]No keypress detected.[/]");
             return false;
         }
 
@@ -376,7 +376,7 @@ public class Other
 
                 if (UserPrincipal.FindByIdentity(ctx, IdentityType.SamAccountName, username) != null)
                 {
-                    AnsiConsole.MarkupLine($"[yellow]⚠ User '{username}' already exists![/]");
+                    AnsiConsole.MarkupLine($"[yellow]User '{username}' already exists![/]");
                     return;
                 }
 
@@ -394,19 +394,19 @@ public class Other
                 user.SetPassword(password);
                 user.Save();
 
-                AnsiConsole.MarkupLine($"[{GraphicSettings.AccentColor}]✅ User '{username}' created successfully![/]");
+                AnsiConsole.MarkupLine($"[{GraphicSettings.AccentColor}] User '{username}' created successfully![/]");
 
                 AnsiConsole.MarkupLine($"[{GraphicSettings.NeutralColor}]Press any key to continue...[/]");
                 Console.ReadKey();
             }
             catch (UnauthorizedAccessException)
             {
-                AnsiConsole.MarkupLine($"[red]❌ Access denied! Run as Administrator.[/]");
+                AnsiConsole.MarkupLine($"[red]Access denied! Run as Administrator.[/]");
                 Console.ReadKey();
             }
             catch (Exception ex)
             {
-                AnsiConsole.MarkupLine($"[red]❌ Error creating user: {ex.Message}[/]");
+                AnsiConsole.MarkupLine($"[red]Error creating user: {ex.Message}[/]");
                 Console.ReadKey();
             }
         }
@@ -443,7 +443,7 @@ public class Other
                         .PageSize(GraphicSettings.PageSize)
                         .AddChoices(users));
 
-                if (!AnsiConsole.Confirm($"[bold red]⚠  Are you sure you want to delete user '{userToDelete}'?[/]", false))
+                if (!AnsiConsole.Confirm($"[bold red]Are you sure you want to delete user '{userToDelete}'?[/]", false))
                     return;
 
 
@@ -454,12 +454,12 @@ public class Other
 
                     user.Delete();
 
-                    AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]✅ User '{userToDelete}' deleted successfully![/]");
+                    AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]User '{userToDelete}' deleted successfully![/]");
                 }
             }
             catch (Exception ex)
             {
-                AnsiConsole.MarkupLine($"[red]❌ Error deleting user: {ex.Message}[/]");
+                AnsiConsole.MarkupLine($"[red]Error deleting user: {ex.Message}[/]");
             }
         }
 
@@ -496,12 +496,12 @@ public class Other
 
                     user.Save();
 
-                    AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]✅ Password changed for user '{username}'![/]");
+                    AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]Password changed for user '{username}'![/]");
                 }
             }
             catch (Exception ex)
             {
-                AnsiConsole.MarkupLine($"[red]❌ Error: {ex.Message}[/]");
+                AnsiConsole.MarkupLine($"[red]Error: {ex.Message}[/]");
             }
         }
 
@@ -535,17 +535,17 @@ public class Other
 
                         group.Save();
 
-                        AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]✅ User '{username}' added to Administrators group![/]");
+                        AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]User '{username}' added to Administrators group![/]");
                     }
                     else
                     {
-                        AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]⚠ User '{username}' is already in Administrators group.[/]");
+                        AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]User '{username}' is already in Administrators group.[/]");
                     }
                 }
             }
             catch (Exception ex)
             {
-                AnsiConsole.MarkupLine($"[red]❌ Error: {ex.Message}[/]");
+                AnsiConsole.MarkupLine($"[red]Error: {ex.Message}[/]");
             }
         }
 
@@ -570,11 +570,11 @@ public class Other
                 {
 
                     var panel = new Panel(
-                        $"[{GraphicSettings.SecondaryColor}]👤 User Information: {user.SamAccountName}[/]\n\n" +
+                        $"[{GraphicSettings.SecondaryColor}]User Information: {user.SamAccountName}[/]\n\n" +
                         $"[{GraphicSettings.SecondaryColor}]Full Name:[/] [white]{user.DisplayName ?? "N/A"}[/]\n" +
                         $"[{GraphicSettings.SecondaryColor}]Description:[/] [white]{user.Description ?? "N/A"}[/]\n" +
                         $"[{GraphicSettings.SecondaryColor}]Email:[/] [white]{user.EmailAddress ?? "N/A"}[/]\n" +
-                        $"[{GraphicSettings.SecondaryColor}]Enabled:[/] {(user.Enabled == true ? "[DarkOrange]Yes[/]" : "[red]No[/]")}\n" +
+                        $"[{GraphicSettings.SecondaryColor}]Enabled:[/] {(user.Enabled == true ? $"[{GraphicSettings.AccentColor}]Yes[/]" : "[red]No[/]")}\n" +
                         $"[{GraphicSettings.SecondaryColor}]Password Never Expires:[/] {(user.PasswordNeverExpires ? $"[{GraphicSettings.SecondaryColor}]Yes[/]" : "[red]No[/]")}\n" +
                         $"[{GraphicSettings.SecondaryColor}]Last Logon:[/] [white]{user.LastLogon?.ToString("yyyy-MM-dd HH:mm") ?? "Never"}[/]\n" +
                         $"[{GraphicSettings.SecondaryColor}]Account Created:[/] [white]{user.Context.ConnectedServer ?? "N/A"}[/]")
@@ -590,7 +590,7 @@ public class Other
             }
             catch (Exception ex)
             {
-                AnsiConsole.MarkupLine($"[red]❌ Error: {ex.Message}[/]");
+                AnsiConsole.MarkupLine($"[red]Error: {ex.Message}[/]");
             }
         }
 
@@ -660,7 +660,7 @@ public class Other
     protected static void ShowAdminWarning()
     {
         var panel = new Panel(
-            $"[red]⚠  ADMINISTRATOR RIGHTS REQUIRED[/]\n\n" +
+            $"[red]ADMINISTRATOR RIGHTS REQUIRED[/]\n\n" +
             $"[{GraphicSettings.SecondaryColor}]This feature requires administrator privileges.[/]\n" +
             $"[{GraphicSettings.SecondaryColor}]Please run the program as Administrator.[/]\n\n" +
             $"[{GraphicSettings.SecondaryColor}]To run as Administrator:[/]\n" +

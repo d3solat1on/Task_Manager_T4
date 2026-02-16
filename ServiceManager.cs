@@ -1,4 +1,4 @@
-using System;
+using System; //dodelat'
 using System.Diagnostics;
 using System.Linq;
 using System.Management;
@@ -21,52 +21,52 @@ public class ServiceManagerUI
                     .Title($"[{GraphicSettings.SecondaryColor}]Select category[/]")
                     .PageSize(GraphicSettings.PageSize)
                     .AddChoices([
-                        "📋 List All Services",
-                        "⚡ List Running Services", 
-                        "💤 List Stopped Services",
-                        "🚀 Start Service",
-                        "⏹️ Stop Service",
-                        "🔄 Restart Service",
-                        "⚙️ Change Startup Type",
-                        "🔍 Search Service",
-                        "📊 Service Dependencies",
-                        "📈 Service Statistics",
-                        "🔙 Back to Main Menu"
+                        "List All Services",
+                        "List Running Services", 
+                        "List Stopped Services",
+                        "Start Service",
+                        "Stop Service",
+                        "Restart Service",
+                        "Change Startup Type",
+                        "Search Service",
+                        "Service Dependencies",
+                        "Service Statistics",
+                        "Back to Main Menu"
                     ]));
             
             switch (choice)
             {
-                case "📋 List All Services":
+                case "List All Services":
                     ShowAllServices();
                     break;
-                case "⚡ List Running Services":
+                case "List Running Services":
                     ShowRunningServices();
                     break;
-                case "💤 List Stopped Services":
+                case "List Stopped Services":
                     ShowStoppedServices();
                     break;
-                case "🚀 Start Service":
+                case "Start Service":
                     StartService();
                     break;
-                case "⏹️ Stop Service":
+                case "Stop Service":
                     StopService();
                     break;
-                case "🔄 Restart Service":
+                case "Restart Service":
                     RestartService();
                     break;
-                case "⚙️ Change Startup Type":
+                case "Change Startup Type":
                     ChangeStartupType();
                     break;
-                case "🔍 Search Service":
+                case "Search Service":
                     SearchService();
                     break;
-                case "📊 Service Dependencies":
+                case "Service Dependencies":
                     ShowServiceDependencies();
                     break;
-                case "📈 Service Statistics":
+                case "Service Statistics":
                     ShowServiceStatistics();
                     break;
-                case "🔙 Back to Main Menu":
+                case "Back to Main Menu":
                     Console.Clear();
                     return;
             }
@@ -461,11 +461,11 @@ public class ServiceManagerUI
             
             var panel = new Panel(
                 $"[{GraphicSettings.AccentColor}]Service Statistics[/]\n\n" +
-                $"[{GraphicSettings.SecondaryColor}]▶ Running:[/] {running} services\n" +
-                $"[{GraphicSettings.SecondaryColor}]⏹ Stopped:[/] {stopped} services\n" +
-                $"[{GraphicSettings.SecondaryColor}]⏸ Paused:[/] {paused} services\n" +
-                $"[{GraphicSettings.SecondaryColor}]⚡ Automatic:[/] {automatic} services\n" +
-                $"[{GraphicSettings.SecondaryColor}]📊 Total:[/] {services.Length} services")
+                $"[{GraphicSettings.SecondaryColor}]Running:[/] {running} services\n" +
+                $"[{GraphicSettings.SecondaryColor}]Stopped:[/] {stopped} services\n" +
+                $"[{GraphicSettings.SecondaryColor}]Paused:[/] {paused} services\n" +
+                $"[{GraphicSettings.SecondaryColor}]Automatic:[/] {automatic} services\n" +
+                $"[{GraphicSettings.SecondaryColor}]Total:[/] {services.Length} services")
             {
                 Border = BoxBorder.Double,
                 BorderStyle = new Style(GraphicSettings.GetColor(GraphicSettings.AccentColor)),

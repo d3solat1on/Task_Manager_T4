@@ -714,7 +714,12 @@ class EnablingPrivacy : Other
         try
         {
             string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            string filePath = Path.Combine(desktopPath, $"PrivacySettings_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.txt");
+            string folderPath = Path.Combine(desktopPath, "SystemReport");
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+            string filePath = Path.Combine(folderPath, $"privacy_settings_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.txt");
 
             using (StreamWriter sw = new(filePath))
             {
@@ -737,7 +742,7 @@ class EnablingPrivacy : Other
                 }
             }
 
-            AnsiConsole.MarkupLine($"[{GraphicSettings.AccentColor}]✓ Settings exported to: {filePath}[/]");
+            AnsiConsole.MarkupLine($"[{GraphicSettings.AccentColor}]Settings exported to: {filePath}[/]");
         }
         catch (Exception ex)
         {

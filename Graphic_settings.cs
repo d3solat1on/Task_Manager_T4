@@ -5,7 +5,7 @@ namespace Task_Manager_T4;
 
 public class GraphicSettings
 {
-    public const string AppVersion = "V1.4.9";
+    public const string AppVersion = "V1.5.1";
     public static int PageSize = 12;
     public static string AccentColor = "orange1";  //MainColor
     public static string SecondaryColor = "white"; //SecondColorForText
@@ -22,34 +22,34 @@ public class GraphicSettings
                 .Title("[white]Выберите визуальный стиль интерфейса:[/]")
                 .AddChoices(
                 [
-                    "🟠 Asiimov (Orange/White)",
-                    "🔵 Classic (Blue/Grey)",
-                    "🟢 Matrix (Green/Black)",
-                    "⚪ Light (Black/White)",
-                    "⬅ Назад"
+                    "Asiimov (Orange/White)",
+                    "Classic (Blue/Grey)",
+                    "Matrix (Green/Black)",
+                    "Light (Black/White)",
+                    "Назад"
                 ]));
 
         switch (themeChoice)
         {
-            case "🟠 Asiimov (Orange/White)":
+            case "Asiimov (Orange/White)":
                 AccentColor = "orange1";
                 SecondaryColor = "white";
                 NeutralColor = "grey";
                 ThemeName = "Asiimov";
                 break;
-            case "🔵 Classic (Blue/Grey)":
+            case "Classic (Blue/Grey)":
                 AccentColor = "dodgerblue1";
                 SecondaryColor = "grey100";
                 NeutralColor = "grey54";
                 ThemeName = "Classic";
                 break;
-            case "🟢 Matrix (Green/Black)":
+            case "Matrix (Green/Black)":
                 AccentColor = "green1";
                 SecondaryColor = "green3";
                 NeutralColor = "darkgreen";
                 ThemeName = "Matrix";
                 break;
-            case "⚪ Light (Black/White)":
+            case "Light (Black/White)":
                 AccentColor = "Gray35";
                 SecondaryColor = "white";
                 NeutralColor = "Gray70";

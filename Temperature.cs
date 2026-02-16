@@ -29,7 +29,7 @@ public class AdvancedTemperatureMonitor
         var table = new Table()
             .Title($"[{GraphicSettings.SecondaryColor}]Hardware Temperatures[/]")
             .BorderColor(GraphicSettings.GetThemeColor)
-            .Border(TableBorder.Rounded)
+            .Border(TableBorder.HeavyEdge)
             .AddColumn(new TableColumn($"[{GraphicSettings.SecondaryColor}]Hardware[/]").LeftAligned())
             .AddColumn(new TableColumn($"[{GraphicSettings.SecondaryColor}]Sensor[/]").LeftAligned())
             .AddColumn(new TableColumn($"[{GraphicSettings.SecondaryColor}]Temperature[/]").RightAligned())

@@ -1,14 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Management;
-using System.Security.Principal;
 using System.Linq;
-using Spectre.Console;
-using System.Net.NetworkInformation;
+using System.Management;
 using System.Net;
-using System.Collections.Generic;
+using System.Net.NetworkInformation;
+using System.Security.Principal;
 using LibreHardwareMonitor.Hardware;
+using Spectre.Console;
 namespace Task_Manager_T4;
 
 public class UpdateVisitor : IVisitor
@@ -275,6 +275,64 @@ class InfoPC
         }
         sw.WriteLine($"  Total Monitors: {monitorCount}");
     }
+    private static void MonitorsInfoDetailed(StreamWriter sw)
+    {
+        sw.WriteLine("=== DISPLAY MONITORS ===");
+
+        try
+        {
+            using var searcher = new ManagementObjectSearcher(@"root\wmi",
+                "SELECT * FROM WmiMonitorID");
+
+            using var searcherParams = new ManagementObjectSearcher(@"root\wmi",
+                "SELECT * FROM WmiMonitorBasicDisplayParams");
+
+            var monitors = searcher.Get().Cast<ManagementObject>().ToList();
+            var monitorParams = searcherParams.Get().Cast<ManagementObject>().ToList();
+
+            int monitorCount = 0;
+
+            for (int i = 0; i < monitors.Count; i++)
+            {
+                monitorCount++;
+                var monitor = monitors[i];
+
+                string name = GetString((ushort[])monitor["UserFriendlyName"]);
+                string serial = GetString((ushort[])monitor["SerialNumberID"]);
+                string manufacturer = GetString((ushort[])monitor["ManufacturerName"]);
+                string product = GetString((ushort[])monitor["ProductCodeID"]);
+
+                
+                ushort? week = monitor["WeekOfManufacture"] as ushort?;
+                ushort? year = monitor["YearOfManufacture"] as ushort?;
+
+                sw.WriteLine($"Monitor #{monitorCount}:");
+                sw.WriteLine($"  Model: {name.Trim()}");
+                sw.WriteLine($"  Manufacturer: {manufacturer.Trim()}");
+                sw.WriteLine($"  Product Code: {product.Trim()}");
+                sw.WriteLine($"  Serial: {serial.Trim()}");
+
+                if (week.HasValue && year.HasValue)
+                    sw.WriteLine($"  Manufactured: Week {week}, {year}");
+
+                
+                if (i < monitorParams.Count)
+                {
+                    var param = monitorParams[i];
+                    sw.WriteLine($"  Max Resolution: {param["MaxHorizontalResolution"]}x{param["MaxVerticalResolution"]}");
+                    sw.WriteLine($"  Video Input: {GetVideoInputType(Convert.ToUInt16(param["VideoInputType"]))}");
+                }
+            }
+
+            sw.WriteLine($"Total Monitors: {monitorCount}");
+        }
+        catch (Exception ex)
+        {
+            sw.WriteLine($"Error getting monitor info: {ex.Message}");
+            
+            MonitorsInfo(sw);
+        }
+    }
     private static void SoftwareInfo(StreamWriter sw)
     {
         sw.WriteLine("=== SOFTWARE INFO ===");
@@ -332,47 +390,103 @@ class InfoPC
             sw.WriteLine($"Security info error: {ex.Message}");
         }
     }
+    private static void PrintSensorsOnly(StreamWriter sw)
+    {
+        Computer computer = new()
+        {
+            IsCpuEnabled = true,
+            IsGpuEnabled = true,
+            IsMemoryEnabled = true,
+            IsMotherboardEnabled = true,
+            IsControllerEnabled = true,
+            IsNetworkEnabled = true,
+            IsStorageEnabled = true
+        };
+
+        computer.Open();
+        computer.Accept(new UpdateVisitor());
+
+        foreach (IHardware hardware in computer.Hardware)
+        {
+            sw.WriteLine($"\n[{hardware.Name}]");
+
+            
+            foreach (ISensor sensor in hardware.Sensors)
+            {
+                if (sensor.Value.HasValue)
+                {
+                    string unit = GetSensorUnit(sensor.SensorType);
+                    sw.WriteLine($"  {sensor.Name,-25}: {sensor.Value.Value,8:F1} {unit}");
+                }
+            }
+
+            
+            foreach (IHardware sub in hardware.SubHardware)
+            {
+                sw.WriteLine($"  > {sub.Name}:");
+                foreach (ISensor sensor in sub.Sensors)
+                {
+                    if (sensor.Value.HasValue)
+                    {
+                        string unit = GetSensorUnit(sensor.SensorType);
+                        sw.WriteLine($"      {sensor.Name,-20}: {sensor.Value.Value,6:F1} {unit}");
+                    }
+                }
+            }
+        }
+
+        computer.Close();
+    }
     public static void CreateDetailedReport()
     {
         try
         {
             string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             string folderPath = Path.Combine(desktopPath, "SystemReport");
-
-            if (!Directory.Exists(folderPath))
-            {
-                Directory.CreateDirectory(folderPath);
-            }
+            Directory.CreateDirectory(folderPath);
 
             string reportFile = Path.Combine(folderPath, $"report_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.txt");
 
             using (StreamWriter sw = new(reportFile))
             {
+                
                 Header(sw);
+                sw.WriteLine(new string('=', 60));
+                
                 GeneralInfo(sw);
+                sw.WriteLine(new string('-', 40));
+                
                 HardwareInfo(sw);
+
+                MonitorsInfoDetailed(sw);
+                sw.WriteLine(new string('-', 40));
+                
                 StorageInfo(sw);
+                sw.WriteLine(new string('-', 40));
+                
                 NetworkInfo(sw);
-                MonitorsInfo(sw);
+                NetWorkAdapters(sw);
+                sw.WriteLine(new string('-', 40));
+                
                 SoftwareInfo(sw);
                 SecurityInfo(sw);
-                NetWorkAdapters(sw);
-                sw.WriteLine("==========================");
-                Monitor(sw);
+
+                sw.WriteLine(new string('=', 60));
+                sw.WriteLine("=== LIVE SENSORS DATA (LibreHardwareMonitor) ===");
+                sw.WriteLine(new string('=', 60));
+                
+                PrintSensorsOnly(sw);
             }
 
-            AnsiConsole.MarkupLine($"[{GraphicSettings.AccentColor}]Report created: {reportFile}[/]");
-            if (Directory.Exists(folderPath))
-            {
-                Process.Start("explorer.exe", folderPath);
-            }
+            AnsiConsole.MarkupLine($"[green]✓[/] Report created: {reportFile}");
+            Process.Start("explorer.exe", folderPath);
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error creating report: {ex.Message}");
+            AnsiConsole.MarkupLine($"[red]✗[/] Error: {ex.Message}");
         }
     }
-    static bool IsUserAdministrator()
+    private static bool IsUserAdministrator()
     {
         try
         {
@@ -450,42 +564,38 @@ class InfoPC
         }
         return result;
     }
-    public static void Monitor(StreamWriter sw)
+    private static string GetSensorUnit(SensorType type)
     {
-        Computer computer = new()
+        return type switch
         {
-            IsCpuEnabled = true,
-            IsGpuEnabled = true,
-            IsMemoryEnabled = true,
-            IsMotherboardEnabled = true,
-            IsControllerEnabled = true,
-            IsNetworkEnabled = true,
-            IsStorageEnabled = true
+            SensorType.Voltage => "V",
+            SensorType.Clock => "MHz",
+            SensorType.Temperature => "°C",
+            SensorType.Load => "%",
+            SensorType.Fan => "RPM",
+            SensorType.Flow => "L/h",
+            SensorType.Control => "%",
+            SensorType.Level => "%",
+            SensorType.Factor => "",
+            SensorType.Power => "W",
+            SensorType.Data => "GB",
+            SensorType.SmallData => "MB",
+            _ => ""
         };
-
-        computer.Open();
-        computer.Accept(new UpdateVisitor());
-
-        foreach (IHardware hardware in computer.Hardware)
+    }
+    private static string GetVideoInputType(ushort type)
+    {
+        return type switch
         {
-            sw.WriteLine("Hardware: {0}", hardware.Name);
-
-            foreach (IHardware subhardware in hardware.SubHardware)
-            {
-                sw.WriteLine("\tSubhardware: {0}", subhardware.Name);
-
-                foreach (ISensor sensor in subhardware.Sensors)
-                {
-                    sw.WriteLine("\t\tSensor: {0}, value: {1}", sensor.Name, sensor.Value);
-                }
-            }
-
-            foreach (ISensor sensor in hardware.Sensors)
-            {
-                sw.WriteLine("\tSensor: {0}, value: {1}", sensor.Name, sensor.Value);
-            }
-        }
-        computer.Close();
+            0 => "Unknown",
+            1 => "VGA",
+            2 => "DVI",
+            3 => "HDMI",
+            4 => "DisplayPort",
+            5 => "Composite",
+            6 => "S-Video",
+            7 => "Component",
+            _ => $"Type {type}"
+        };
     }
 }
-

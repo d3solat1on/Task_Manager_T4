@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Threading.Tasks;
 using Spectre.Console;
 using Task_Manager_T4;
 using System.ServiceProcess;
@@ -112,7 +111,6 @@ class WindowsOptimization : Other
                         "Сброс сети и DNS",
                         "Очистка системных журналов",
                         "Отключение визуальных эффектов",
-                        "Максимальная производительность",
                         "Назад"
                     ]));
 
@@ -150,10 +148,6 @@ class WindowsOptimization : Other
                     break;
                 case "Очистка системных журналов":
                     ClearEventLogs();
-                    Console.Clear();
-                    break;
-                case "Максимальная производительность(Энергосбережение)":
-                    EnableUltimatePerformance();
                     Console.Clear();
                     break;
                 case "Назад":
@@ -287,23 +281,6 @@ class WindowsOptimization : Other
                 }
             }
         }
-        AnsiConsole.MarkupLine($"[{GraphicSettings.NeutralColor}]Press any key to return.[/]");
-        Console.ReadKey();
-    }
-    private static void EnableUltimatePerformance()
-    {
-        string schemaId = "e9a42b02-d5df-448d-aa00-03f14749eb61";
-
-        AnsiConsole.Status().Start("Активация режима производительности...", ctx =>
-        {
-
-            ExecuteCommand("powercfg", $"-duplicatescheme {schemaId}");
-
-
-            ExecuteCommand("powercfg", $"-setactive {schemaId}");
-
-            AnsiConsole.MarkupLine($"[{GraphicSettings.AccentColor}] Режим 'Максимальная производительность' активирован! [/]");
-        });
         AnsiConsole.MarkupLine($"[{GraphicSettings.NeutralColor}]Press any key to return.[/]");
         Console.ReadKey();
     }

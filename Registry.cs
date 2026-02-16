@@ -20,24 +20,24 @@ class Management_Registry
                     .Title($"[{GraphicSettings.SecondaryColor}]ВЫБЕРИТЕ ДЕЙСТВИЕ:[/]")
                     .PageSize(12)
                     .AddChoices([
-                        "🛡️ System Info (Read Only)",
-                        "🚀 View Startup Programs",
-                        "🕒 Toggle Clock Seconds (Tweak)",
+                        "System Info (Read Only)",
+                        "View Startup Programs",
+                        "Toggle Clock Seconds (Tweak)",
                         "⬅ Назад"
                     ]));
 
             switch (choice)
             {
-                case "🛡️ System Info (Read Only)":
+                case "System Info (Read Only)":
                     ShowSystemInfo();
                     break;
-                case "🚀 View Startup Programs":
+                case "View Startup Programs":
                     ShowStartupRegistry();
                     break;
-                case "🕒 Toggle Clock Seconds (Tweak)":
+                case "Toggle Clock Seconds (Tweak)":
                     ToggleSecondsInClock();
                     break;
-                case "⬅ Назад":
+                case "Назад":
                     return;
             }
         }
@@ -80,7 +80,7 @@ class Management_Registry
                 table.AddRow($"[{GraphicSettings.SecondaryColor}]Vendor[/]", vendor_motherboard?.ToString() ?? "N/A");
                 table.AddRow($"[{GraphicSettings.SecondaryColor}]Processor[/]", name_processor?.ToString()?.Trim() ?? "N/A");
                 table.AddRow($"[{GraphicSettings.SecondaryColor}]Vendor[/]", vendor_processor?.ToString() ?? "N/A");
-                table.AddRow($"[{GraphicSettings.SecondaryColor}]Videocar[/]", model_videocard?.ToString() ?? "N/A");
+                table.AddRow($"[{GraphicSettings.SecondaryColor}]Videocard[/]", model_videocard?.ToString() ?? "N/A");
                 table.AddRow($"[{GraphicSettings.SecondaryColor}]Vendor[/]", vendor_videocard?.ToString() ?? "N/A");
 
                 AnsiConsole.Write(new Rule($"[{GraphicSettings.SecondaryColor}]SYSTEM_HARDWARE_REPORT[/]").RuleStyle(GraphicSettings.AccentColor).LeftJustified());
