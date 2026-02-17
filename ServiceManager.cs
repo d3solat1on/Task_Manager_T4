@@ -1,8 +1,10 @@
 using System; //dodelat'
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Management;
 using System.ServiceProcess;
+using Mono.Posix;
 using Spectre.Console;
 
 namespace Task_Manager_T4;
@@ -14,7 +16,7 @@ public class ServiceManagerUI
         while (true)
         {
             Console.Clear();
-            
+
             AnsiConsole.Write(new Rule($"[{GraphicSettings.SecondaryColor}]Service Manager[/]").RuleStyle(GraphicSettings.AccentColor).LeftJustified());
             var choice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
@@ -22,7 +24,7 @@ public class ServiceManagerUI
                     .PageSize(GraphicSettings.PageSize)
                     .AddChoices([
                         "List All Services",
-                        "List Running Services", 
+                        "List Running Services",
                         "List Stopped Services",
                         "Start Service",
                         "Stop Service",
@@ -31,9 +33,10 @@ public class ServiceManagerUI
                         "Search Service",
                         "Service Dependencies",
                         "Service Statistics",
+                        "Export to txt file",
                         "Back to Main Menu"
                     ]));
-            
+
             switch (choice)
             {
                 case "List All Services":
@@ -66,16 +69,54 @@ public class ServiceManagerUI
                 case "Service Statistics":
                     ShowServiceStatistics();
                     break;
+                case "Export to txt file":
+                    ExportToTxtFile();
+                    break;
                 case "Back to Main Menu":
                     Console.Clear();
                     return;
             }
-            
+
             AnsiConsole.MarkupLine($"\n[{GraphicSettings.NeutralColor}]Press any key to continue...[/]");
             Console.ReadKey();
         }
     }
-    
+
+    private static void ExportToTxtFile()
+    {
+        string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+        string folderPath = Path.Combine(desktopPath, "SystemReport");
+
+        if (!Directory.Exists(folderPath))
+        {
+            Directory.CreateDirectory(folderPath);
+        }
+
+        string reportFile = Path.Combine(folderPath, $"service_list_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.txt");
+
+        using StreamWriter sw = new(reportFile);
+        sw.WriteLine("=== Service LIST REPORT ===");
+        sw.WriteLine($"Generated: {DateTime.Now}");
+        sw.WriteLine($"Computer: {Environment.MachineName}");
+        sw.WriteLine(new string('=', 80));
+        sw.WriteLine($"{"Name",-30} | {"Display Name",-50} | {"Status",-10} | {"Startup Type",-15}");
+        sw.WriteLine(new string('-', 110));
+        try
+        {
+            var services = ServiceController.GetServices();
+            foreach (var service in services.OrderBy(s => s.ServiceName))
+            {
+                string startupType = GetStartupType(service.ServiceName);
+                sw.WriteLine($"{service.ServiceName,-30} | {service.DisplayName,-50} | {service.Status,-10} | {startupType,-15}");
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowError($"Failed to export services: {ex.Message}");
+        }
+        sw.WriteLine("Report saved successfully!");
+        AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]Service list exported to:[/] [{GraphicSettings.SecondaryColor}]{reportFile}[/]");
+    }
     private static void ShowAllServices()
     {
         try
@@ -106,7 +147,7 @@ public class ServiceManagerUI
             }
 
             AnsiConsole.Write(table);
-            
+
             ShowServiceCounts(services);
         }
         catch (Exception ex)
@@ -114,7 +155,7 @@ public class ServiceManagerUI
             ShowError($"Failed to get services: {ex.Message}");
         }
     }
-    
+
     private static void ShowRunningServices()
     {
         try
@@ -122,7 +163,7 @@ public class ServiceManagerUI
             var runningServices = ServiceController.GetServices()
                 .Where(s => s.Status == ServiceControllerStatus.Running)
                 .OrderBy(s => s.ServiceName);
-            
+
             var table = new Table()
                 .Title($"[{GraphicSettings.AccentColor}]Running Services ({runningServices.Count()})[/]")
                 .BorderColor(GraphicSettings.GetThemeColor)
@@ -131,7 +172,7 @@ public class ServiceManagerUI
                 .AddColumn(new TableColumn($"[{GraphicSettings.SecondaryColor}]Display Name[/]").LeftAligned())
                 .AddColumn(new TableColumn($"[{GraphicSettings.SecondaryColor}]Startup Type[/]").Centered())
                 .AddColumn(new TableColumn($"[{GraphicSettings.SecondaryColor}]Memory[/]").RightAligned());
-            
+
             foreach (var service in runningServices)
             {
                 table.AddRow(
@@ -149,7 +190,7 @@ public class ServiceManagerUI
             ShowError($"Failed to get running services: {ex.Message}");
         }
     }
-    
+
     private static void ShowStoppedServices()
     {
         try
@@ -157,7 +198,7 @@ public class ServiceManagerUI
             var stoppedServices = ServiceController.GetServices()
                 .Where(s => s.Status == ServiceControllerStatus.Stopped)
                 .OrderBy(s => s.ServiceName);
-            
+
             var table = new Table()
                 .Title($"[{GraphicSettings.AccentColor}]Stopped Services ({stoppedServices.Count()})[/]")
                 .BorderColor(GraphicSettings.GetThemeColor)
@@ -166,7 +207,7 @@ public class ServiceManagerUI
                 .AddColumn(new TableColumn($"[{GraphicSettings.SecondaryColor}]Display Name[/]").LeftAligned())
                 .AddColumn(new TableColumn($"[{GraphicSettings.SecondaryColor}]Startup Type[/]").Centered())
                 .AddColumn(new TableColumn($"[{GraphicSettings.SecondaryColor}]Can Start[/]").Centered());
-            
+
             foreach (var service in stoppedServices)
             {
                 string canStart = service.Status == ServiceControllerStatus.Stopped ? $"[{GraphicSettings.AccentColor}]✓[/]" : "[red]✗[/]";
@@ -186,7 +227,7 @@ public class ServiceManagerUI
             ShowError($"Failed to get stopped services: {ex.Message}");
         }
     }
-    
+
     private static void SearchService()
     {
         try
@@ -198,13 +239,13 @@ public class ServiceManagerUI
                 .Where(s => s.ServiceName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase) ||
                            s.DisplayName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
                 .OrderBy(s => s.ServiceName);
-            
+
             if (!services.Any())
             {
                 AnsiConsole.MarkupLine($"[{GraphicSettings.AccentColor}]No services found matching '{searchTerm}'.[/]");
                 return;
             }
-            
+
             var table = new Table()
                 .Title($"[{GraphicSettings.AccentColor}]Search Results: '{searchTerm}' ({services.Count()})[/]")
                 .BorderColor(GraphicSettings.GetThemeColor)
@@ -213,7 +254,7 @@ public class ServiceManagerUI
                 .AddColumn(new TableColumn($"[{GraphicSettings.SecondaryColor}]Display Name[/]").LeftAligned())
                 .AddColumn(new TableColumn($"[{GraphicSettings.SecondaryColor}]Status[/]").Centered())
                 .AddColumn(new TableColumn($"[{GraphicSettings.SecondaryColor}]Startup Type[/]").Centered());
-            
+
             foreach (var service in services)
             {
                 string status = GetStatusColor(service.Status);
@@ -233,7 +274,7 @@ public class ServiceManagerUI
             ShowError($"Failed to search services: {ex.Message}");
         }
     }
-    
+
     private static void ShowServiceDependencies()
     {
         try
@@ -286,7 +327,7 @@ public class ServiceManagerUI
             ShowError($"Failed to get service dependencies: {ex.Message}");
         }
     }
-    
+
     private static void StartService()
     {
         try
@@ -317,7 +358,7 @@ public class ServiceManagerUI
             ShowError($"Failed to start service: {ex.Message}");
         }
     }
-    
+
     private static void StopService()
     {
         try
@@ -363,7 +404,7 @@ public class ServiceManagerUI
             ShowError($"Failed to stop service: {ex.Message}");
         }
     }
-    
+
     private static void RestartService()
     {
         try
@@ -397,7 +438,7 @@ public class ServiceManagerUI
             ShowError($"Failed to restart service: {ex.Message}");
         }
     }
-    
+
     private static void ChangeStartupType()
     {
         try
@@ -405,25 +446,25 @@ public class ServiceManagerUI
             string serviceName = AnsiConsole.Prompt(
                 new TextPrompt<string>($"[{GraphicSettings.SecondaryColor}]Enter service name:[/]")
                     .PromptStyle(GraphicSettings.AccentColor));
-            
+
             var startupType = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title($"[{GraphicSettings.AccentColor}]Select startup type:[/]")
                     .AddChoices([
                         "Automatic",
                         "Automatic (Delayed)",
-                        "Manual", 
+                        "Manual",
                         "Disabled"
                     ]));
-            
+
             string command = $"Set-Service -Name '{serviceName}' -StartupType {startupType.Split(' ')[0]}";
-            
+
             AnsiConsole.Status()
                 .Start($"[{GraphicSettings.NeutralColor}]Changing startup type to {startupType}...[/]", ctx =>
                 {
                     ctx.Spinner(Spinner.Known.Dots);
                     ctx.SpinnerStyle(Style.Parse(GraphicSettings.AccentColor));
-                    
+
                     var process = new Process
                     {
                         StartInfo = new ProcessStartInfo
@@ -435,11 +476,11 @@ public class ServiceManagerUI
                             Verb = "runas"
                         }
                     };
-                    
+
                     process.Start();
                     process.WaitForExit();
                 });
-            
+
             AnsiConsole.MarkupLine($"[{GraphicSettings.AccentColor}]✓ Startup type changed to {startupType}[/]");
         }
         catch (Exception ex)
@@ -447,7 +488,7 @@ public class ServiceManagerUI
             ShowError($"Failed to change startup type: {ex.Message}");
         }
     }
-    
+
     private static void ShowServiceStatistics()
     {
         try
@@ -458,7 +499,7 @@ public class ServiceManagerUI
             int stopped = services.Count(s => s.Status == ServiceControllerStatus.Stopped);
             int paused = services.Count(s => s.Status == ServiceControllerStatus.Paused);
             int automatic = GetAutomaticServicesCount();
-            
+
             var panel = new Panel(
                 $"[{GraphicSettings.AccentColor}]Service Statistics[/]\n\n" +
                 $"[{GraphicSettings.SecondaryColor}]Running:[/] {running} services\n" +
@@ -471,16 +512,16 @@ public class ServiceManagerUI
                 BorderStyle = new Style(GraphicSettings.GetColor(GraphicSettings.AccentColor)),
                 Padding = new Padding(2, 1, 2, 1)
             };
-            
+
             AnsiConsole.Write(panel);
-            
+
             var chart = new BreakdownChart()
                 .Width(60)
                 .ShowPercentage()
                 .AddItem("Running", running, GraphicSettings.GetColor(GraphicSettings.SecondaryColor))
                 .AddItem("Stopped", stopped, GraphicSettings.GetColor(GraphicSettings.AccentColor))
                 .AddItem("Paused", paused, Color.Gray);
-            
+
             AnsiConsole.Write(chart);
         }
         catch (Exception ex)
@@ -488,9 +529,9 @@ public class ServiceManagerUI
             ShowError($"Failed to get statistics: {ex.Message}");
         }
     }
-    
+
     // ============ ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ ============
-    
+
     private static string GetStatusColor(ServiceControllerStatus status)
     {
         return status switch
@@ -511,7 +552,7 @@ public class ServiceManagerUI
         if ((type & ServiceType.Win32ShareProcess) != 0) return "Shared";
         return type.ToString();
     }
-    
+
     private static string GetStartupType(string serviceName)
     {
         try
@@ -530,7 +571,7 @@ public class ServiceManagerUI
         }
         return "Unknown";
     }
-    
+
     private static long GetServiceMemoryUsage(string serviceName)
     {
         try
@@ -558,7 +599,7 @@ public class ServiceManagerUI
             return 0;
         }
     }
-    
+
     private static int GetAutomaticServicesCount()
     {
         try
@@ -582,7 +623,7 @@ public class ServiceManagerUI
             return 0;
         }
     }
-    
+
     private static void ShowServiceCounts(ServiceController[] services)
     {
         var grid = new Grid()
@@ -601,25 +642,25 @@ public class ServiceManagerUI
         );
         AnsiConsole.Write(grid);
     }
-    
+
     private static bool IsCriticalService(string serviceName)
     {
         string[] criticalServices = [
-            "lsass", "wininit", "services", "svchost", 
+            "lsass", "wininit", "services", "svchost",
             "csrss", "smss", "system", "winlogon"
         ];
-        
-        return criticalServices.Any(cs => 
+
+        return criticalServices.Any(cs =>
             serviceName.Contains(cs, StringComparison.OrdinalIgnoreCase));
     }
-    
+
     private static string Ellipsis(string text, int maxLength)
     {
         if (string.IsNullOrEmpty(text)) return text;
         if (text.Length <= maxLength) return text;
         return string.Concat(text.AsSpan(0, maxLength - 3), "...");
     }
-    
+
     private static void ShowError(string message)
     {
         AnsiConsole.MarkupLine($"[red]✗ {message}[/]");

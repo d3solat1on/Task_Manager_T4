@@ -5,8 +5,8 @@ namespace Task_Manager_T4;
 
 public class GraphicSettings
 {
-    public const string AppVersion = "V1.5.1";
-    public static int PageSize = 12;
+    public const string AppVersion = "V1.5.3";
+    public const int PageSize = 12;
     public static string AccentColor = "orange1";  //MainColor
     public static string SecondaryColor = "white"; //SecondColorForText
     public static string NeutralColor = "grey";    //Additional color
@@ -20,6 +20,7 @@ public class GraphicSettings
         var themeChoice = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title("[white]Выберите визуальный стиль интерфейса:[/]")
+                .PageSize(PageSize)
                 .AddChoices(
                 [
                     "Asiimov (Orange/White)",

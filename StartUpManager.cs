@@ -1,69 +1,207 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Win32;
 using Spectre.Console;
-using Task_Manager_T4;
+namespace Task_Manager_T4;
 
-internal class StartUpManager
+public class StartUpManager
 {
-    public static bool ShowStartupManagerUI()
+     public static async Task ShowStartupManagerUI()
     {
-        try
+        while (true)
         {
-            while (true)
-            {
-                Console.Clear();
-                AnsiConsole.Write(new Rule($"[{GraphicSettings.SecondaryColor}]StartUp Management[/]").RuleStyle(GraphicSettings.AccentColor).LeftJustified());
-                var choice = AnsiConsole.Prompt(
-                    new SelectionPrompt<string>()
-                        .Title($"[{GraphicSettings.SecondaryColor}]Select category[/]")
-                        .PageSize(12)
-                        .AddChoices([
-                        "View All Startup Items",
+            Console.Clear();
+            AnsiConsole.Write(new Rule($"[{GraphicSettings.SecondaryColor}]StartUp Management[/]").RuleStyle(GraphicSettings.AccentColor).LeftJustified());
+            var choice = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title($"[{GraphicSettings.SecondaryColor}]Select category[/]")
+                    .PageSize(GraphicSettings.PageSize)
+                    .AddChoices([
+                    "View All Startup Items",
                         "View Startup Folder",
                         "View Registry Entries",
                         "Startup Statistics",
                         "Delete the file from startup",
+                        "Export to txt file",
                         "Back to Main Menu"
-                        ]));
+                    ]));
 
-                switch (choice)
-                {
-                    case "View All Startup Items":
-                        ShowAllStartupItemsTable();
-                        break;
-                    case "View Startup Folder":
-                        ShowStartupFolderTable();
-                        break;
-                    case "View Registry Entries":
-                        ShowRegistryStartupTable();
-                        break;
-                    case "Startup Statistics":
-                        ShowStartupStatistics();
-                        break;
-                    case "Delete the file from startup":
-                        RemoveFromStartup();
-                        break;
-                    case "Back to Main Menu":
-                        Console.Clear();
-                        return true;
-                }
-
-                AnsiConsole.MarkupLine($"\n[{GraphicSettings.NeutralColor}]Press any key to continue...[/]");
-                Console.ReadKey();
+            switch (choice)
+            {
+                case "View All Startup Items":
+                    ShowAllStartupItemsTable();
+                    AnsiConsole.MarkupLine($"\n[{GraphicSettings.NeutralColor}]Press any key to continue...[/]");
+                    Console.ReadKey();
+                    Console.Clear();
+                    break;
+                case "View Startup Folder":
+                    ShowStartupFolderTable();
+                    AnsiConsole.MarkupLine($"\n[{GraphicSettings.NeutralColor}]Press any key to continue...[/]");
+                    Console.ReadKey();
+                    Console.Clear();
+                    break;
+                case "View Registry Entries":
+                    ShowRegistryStartupTable();
+                    AnsiConsole.MarkupLine($"\n[{GraphicSettings.NeutralColor}]Press any key to continue...[/]");
+                    Console.ReadKey();
+                    Console.Clear();
+                    break;
+                case "Startup Statistics":
+                    ShowStartupStatistics();
+                    AnsiConsole.MarkupLine($"\n[{GraphicSettings.NeutralColor}]Press any key to continue...[/]");
+                    Console.ReadKey();
+                    Console.Clear();
+                    break;
+                case "Delete the file from startup":
+                    RemoveFromStartup();
+                    AnsiConsole.MarkupLine($"\n[{GraphicSettings.NeutralColor}]Press any key to continue...[/]");
+                    Console.ReadKey();
+                    Console.Clear();
+                    break;
+                case "Export to txt file":
+                    ExportToTxtFile();
+                    AnsiConsole.MarkupLine($"\n[{GraphicSettings.NeutralColor}]Press any key to continue...[/]");
+                    Console.ReadKey();
+                    Console.Clear();
+                    break;
+                case "Back to Main Menu":
+                    Console.Clear();
+                    await Program.Function_list();
+                    break;
             }
-        }
-        catch (Exception ex)
-        {
-            Console.Clear();
-            Console.WriteLine($"ERROR in Startup Manager: {ex.Message}");
-            Console.WriteLine("\nPress any key to return to main menu...");
-            Console.ReadKey();
-            return true;
         }
     }
 
+    private static async void ExportToTxtFile()
+    {
+        try
+        {
+            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            string folderPath = Path.Combine(desktopPath, "SystemReport");
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            string reportFile = Path.Combine(folderPath, $"start_up_list_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.txt");
+
+            using StreamWriter sw = new(reportFile);
+            sw.WriteLine("=== STARTUP LIST REPORT ===");
+            sw.WriteLine($"Generated: {DateTime.Now}");
+            sw.WriteLine($"Computer: {Environment.MachineName}");
+            sw.WriteLine(new string('=', 80));
+            sw.WriteLine($"{"Type",-30} | {"Name",-95} | {"Path",-10} | {"Location",-15}");
+            sw.WriteLine(new string('-', 110));
+
+            // 1. Программы из реестра (автозагрузка)
+            sw.WriteLine("\n[Registry Startup Items]");
+            sw.WriteLine(new string('-', 175));
+
+            string registryPath = @"Software\Microsoft\Windows\CurrentVersion\Run";
+
+            // Текущий пользователь
+            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(registryPath))
+            {
+                if (key != null)
+                {
+                    foreach (string valueName in key.GetValueNames())
+                    {
+                        string value = key.GetValue(valueName)?.ToString() ?? "";
+                        sw.WriteLine($"{"Registry (HKCU)",-95} | {valueName,-50} | {value,-10} | {"Current User",-15}");
+                    }
+                }
+            }
+
+            // Все пользователи (Local Machine)
+            using (RegistryKey key = Registry.LocalMachine.OpenSubKey(registryPath))
+            {
+                if (key != null)
+                {
+                    foreach (string valueName in key.GetValueNames())
+                    {
+                        string value = key.GetValue(valueName)?.ToString() ?? "";
+                        sw.WriteLine($"{"Registry (HKLM)",-95} | {valueName,-50} | {value,-10} | {"Local Machine",-15}");
+                    }
+                }
+            }
+
+            // 2. Папки автозагрузки
+            sw.WriteLine("\n[Startup Folders]");
+            sw.WriteLine(new string('-', 175));
+
+            string userStartup = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
+            string commonStartup = Environment.GetFolderPath(Environment.SpecialFolder.CommonStartup);
+
+            // User Startup Folder
+            if (Directory.Exists(userStartup))
+            {
+                foreach (var file in Directory.GetFiles(userStartup, "*", SearchOption.TopDirectoryOnly))
+                {
+                    string fileName = Path.GetFileName(file);
+                    sw.WriteLine($"{"User Startup Folder",-95} | {fileName,-50} | {file,-10} | {"Current User",-15}");
+                }
+            }
+
+            // Common Startup Folder (All Users)
+            if (Directory.Exists(commonStartup))
+            {
+                foreach (var file in Directory.GetFiles(commonStartup, "*", SearchOption.TopDirectoryOnly))
+                {
+                    string fileName = Path.GetFileName(file);
+                    sw.WriteLine($"{"Common Startup Folder",-95} | {fileName,-50} | {file,-10} | {"All Users",-15}");
+                }
+            }
+
+            // 3. Дополнительные места автозагрузки
+            sw.WriteLine("\n[Additional Startup Locations]");
+            sw.WriteLine(new string('-', 175));
+
+            // RunOnce
+            string[] runOncePaths =
+            [
+            @"Software\Microsoft\Windows\CurrentVersion\RunOnce",
+            @"Software\Microsoft\Windows\CurrentVersion\RunOnceEx"
+            ];
+
+            foreach (string path in runOncePaths)
+            {
+                using (RegistryKey key = Registry.CurrentUser.OpenSubKey(path))
+                {
+                    if (key != null)
+                    {
+                        foreach (string valueName in key.GetValueNames())
+                        {
+                            string value = key.GetValue(valueName)?.ToString() ?? "";
+                            sw.WriteLine($"{"RunOnce (HKCU)",-95} | {valueName,-50} | {value,-10} | {"Current User",-15}");
+                        }
+                    }
+                }
+
+                using (RegistryKey key = Registry.LocalMachine.OpenSubKey(path))
+                {
+                    if (key != null)
+                    {
+                        foreach (string valueName in key.GetValueNames())
+                        {
+                            string value = key.GetValue(valueName)?.ToString() ?? "";
+                            sw.WriteLine($"{"RunOnce (HKLM)",-95} | {valueName,-50} | {value,-10} | {"Local Machine",-15}");
+                        }
+                    }
+                }
+            }
+
+            sw.WriteLine(new string('=', 175));
+            sw.WriteLine($"Total startup items collected");
+
+            AnsiConsole.MarkupLine($"[green]✓[/] Startup list saved to: {reportFile}");
+        }
+        catch (Exception ex)
+        {
+            AnsiConsole.MarkupLine($"[red]Error: {ex.Message}[/]");
+        }
+    }
     private static void RemoveFromStartup()
     {
         Console.Clear();
@@ -119,13 +257,11 @@ internal class StartUpManager
         Console.ReadKey();
         Console.Clear();
     }
-
-
     private static void ShowAllStartupItemsTable()
     {
         var table = new Table()
             .Title($"[{GraphicSettings.SecondaryColor}]All Startup Items[/]")
-            .BorderColor(GraphicSettings.GetThemeColor) 
+            .BorderColor(GraphicSettings.GetThemeColor)
             .Border(TableBorder.Rounded)
             .AddColumn(new TableColumn($"[{GraphicSettings.SecondaryColor}]Type[/]").Centered())
             .AddColumn(new TableColumn($"[{GraphicSettings.SecondaryColor}]Name[/]").LeftAligned())
@@ -177,21 +313,15 @@ internal class StartUpManager
                 "N/A"
             );
         }
-
-
         try
         {
-
-
             using (RegistryKey key = Registry.CurrentUser.OpenSubKey(
                 @"Software\Microsoft\Windows\CurrentVersion\Run"))
             {
                 if (key != null)
                 {
-
                     foreach (string valueName in key.GetValueNames())
                     {
-
                         string value = key.GetValue(valueName)?.ToString() ?? "";
                         table.AddRow(
                             $"[{GraphicSettings.SecondaryColor}]Registry[/]",
@@ -202,9 +332,6 @@ internal class StartUpManager
                     }
                 }
             }
-
-
-
             using (RegistryKey key = Registry.LocalMachine.OpenSubKey(
                 @"Software\Microsoft\Windows\CurrentVersion\Run"))
             {
@@ -234,10 +361,8 @@ internal class StartUpManager
                 "N/A"
             );
         }
-
         AnsiConsole.Write(table);
     }
-
     private static void ShowStartupFolderTable()
     {
 
@@ -294,10 +419,8 @@ internal class StartUpManager
 
         AnsiConsole.Write(table);
     }
-
     private static void ShowRegistryStartupTable()
     {
-
         var table = new Table()
             .Title($"[ {GraphicSettings.SecondaryColor}]Registry Startup Entries[/]")
             .BorderColor(GraphicSettings.GetThemeColor)
@@ -359,7 +482,6 @@ internal class StartUpManager
 
         AnsiConsole.Write(table);
     }
-
     private static void ShowStartupStatistics()
     {
         int folderCount = 0;
@@ -413,8 +535,6 @@ internal class StartUpManager
             AnsiConsole.MarkupLine($"\n[{GraphicSettings.SecondaryColor}]✓ Good: Minimal startup items.[/]");
         }
     }
-
-
     private static string TruncateString(string text, int maxLength)
     {
         if (string.IsNullOrEmpty(text) || text.Length <= maxLength)

@@ -89,7 +89,7 @@ public class Other
 
                     if (IsKeyboardWorking())
                     {
-                        AnsiConsole.MarkupLine($"\n[{GraphicSettings.SecondaryColor}]✅ Keyboard appears to be working normally.[/]");
+                        AnsiConsole.MarkupLine($"\n[{GraphicSettings.SecondaryColor}]Keyboard appears to be working normally.[/]");
                         return;
                     }
 

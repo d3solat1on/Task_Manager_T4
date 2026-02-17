@@ -110,16 +110,7 @@ internal class Program
                     Console.Clear();
                     break;
                 case "Startup Manager":
-                    try
-                    {
-                        StartUpManager startupManager = new();
-                        StartUpManager.ShowStartupManagerUI();
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error: {ex.Message}");
-                        Console.ReadKey();
-                    }
+                    await StartUpManager.ShowStartupManagerUI();
                     break;
                 case "Check Temperature":
                     AdvancedTemperatureMonitor.ShowAllTemperatures();

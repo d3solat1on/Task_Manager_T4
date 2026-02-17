@@ -388,7 +388,7 @@ class EnablingPrivacy : Other
             string status;
             if (result.Value)
             {
-                status = $"[green]Applied[/]";
+                status = $"[{GraphicSettings.AccentColor}]Applied[/]";
             }
             else
             {
@@ -480,17 +480,17 @@ class EnablingPrivacy : Other
 
             if (currentValue == null)
             {
-                status = "⚠ Not configured";
+                status = "Not configured";
                 statusColor = "yellow";
             }
             else if (currentValue.ToString() == setting.Value.ToString())
             {
-                status = "✓ Optimized";
+                status = "Optimized";
                 statusColor = "green";
             }
             else
             {
-                status = "✗ Not optimized";
+                status = "Not optimized";
                 statusColor = "red";
             }
 

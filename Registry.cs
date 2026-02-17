@@ -18,12 +18,12 @@ class Management_Registry
             var choice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title($"[{GraphicSettings.SecondaryColor}]ВЫБЕРИТЕ ДЕЙСТВИЕ:[/]")
-                    .PageSize(12)
+                    .PageSize(GraphicSettings.PageSize)
                     .AddChoices([
                         "System Info (Read Only)",
                         "View Startup Programs",
                         "Toggle Clock Seconds (Tweak)",
-                        "⬅ Назад"
+                        "Назад"
                     ]));
 
             switch (choice)
@@ -38,7 +38,7 @@ class Management_Registry
                     ToggleSecondsInClock();
                     break;
                 case "Назад":
-                    return;
+                     return;
             }
         }
     }

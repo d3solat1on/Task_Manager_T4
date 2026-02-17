@@ -2,11 +2,13 @@ using System;
 using System.Management;
 using System.Linq;
 using Spectre.Console;
+using System.IO;
 
 namespace Task_Manager_T4;
 
 class DriveManager
 {
+
     public static void Main_Menu_Drives()
     {
         while (true)
@@ -17,7 +19,7 @@ class DriveManager
             var choice = AnsiConsole.Prompt(
                 new SelectionPrompt<string>()
                     .Title("Выберите категорию драйверов:")
-                    .PageSize(12)
+                    .PageSize(GraphicSettings.PageSize)
                     .AddChoices([
                         "1 - Все устройства (подписанные)",
                         "2 - Процессоры (CPU)",
@@ -27,6 +29,7 @@ class DriveManager
                         "6 - Дисковые накопители",
                         "7 - Мониторы",
                         "8 - Периферия (Мышь/Клавиатура)",
+                        "9 - Export to txt file",
                         "0 - Вернуться в главное меню"
                     ]));
 
@@ -40,6 +43,7 @@ class DriveManager
                 case "6": ShowDiskDrives(); break;
                 case "7": ShowMonitorDrives(); break;
                 case "8": ShowInputDrives(); break;
+                case "9": ExportToTxtFile(); break;
                 case "0": Console.Clear(); return;
             }
 
@@ -48,18 +52,58 @@ class DriveManager
         }
     }
 
+    private static void ExportToTxtFile()
+    {
+        using var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_PnPSignedDriver WHERE Signer IS NOT NULL");
+        var results = searcher.Get().Cast<ManagementObject>().ToList();
+        try
+        {
+            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            string folderPath = Path.Combine(desktopPath, "SystemReport");
+
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            string reportFile = Path.Combine(folderPath, $"drives_list_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.txt");
+
+            using StreamWriter sw = new(reportFile);
+            sw.WriteLine("=== DRIVES LIST REPORT ===");
+            sw.WriteLine($"Generated: {DateTime.Now}");
+            sw.WriteLine($"Computer: {Environment.MachineName}");
+            sw.WriteLine(new string('=', 80));
+            sw.WriteLine($"{"Устройство",-67} | {"Весрсия",-20} | {"Производитель",-30}");
+            sw.WriteLine(new string('-', 100));
+            foreach (var obj in results)
+            {
+                object nameObj = obj["FriendlyName"] ?? obj["DeviceName"] ?? obj["Caption"] ?? "Неизвестно";
+                string name = nameObj.ToString();
+                string version = obj["DriverVersion"]?.ToString() ?? "Н/Д";
+                string manufacturer = obj["Manufacturer"]?.ToString() ?? "Н/Д";
+                sw.WriteLine($"{name,-67} | {version,-20} | {manufacturer,-30}");
+            }
+            sw.WriteLine(new string('=', 80));
+            sw.WriteLine("Report saved successfully!");
+            AnsiConsole.MarkupLine($"[{GraphicSettings.SecondaryColor}]drives list exported to:[/] [{GraphicSettings.SecondaryColor}]{reportFile}[/]");
+        }
+        catch (Exception e)
+        {
+            AnsiConsole.MarkupLine($"[red]Ошибка при экспорте:[/] {Markup.Escape(e.Message)}");
+        }
+    }
     private static void ShowDriverTable(string query, string title, string color)
     {
         var table = new Table()
                                 .Border(TableBorder.Rounded)
-                                .BorderColor(GraphicSettings.GetThemeColor); 
+                                .BorderColor(GraphicSettings.GetThemeColor);
         table.Title($"[{GraphicSettings.AccentColor}]{title}[/]");
         table.AddColumn("[bold]Устройство[/]");
         table.AddColumn("[bold]Версия[/]");
         table.AddColumn("[bold]Производитель[/]");
         try
         {
-            AnsiConsole.Status().Start("Опрашиваю систему...", ctx => 
+            AnsiConsole.Status().Start("Опрашиваю систему...", ctx =>
             {
 
                 using var searcher = new ManagementObjectSearcher(query);
@@ -75,8 +119,8 @@ class DriveManager
                     // Пробуем FriendlyName (понятное имя), если нет - DeviceName или Caption
 
                     string name = Markup.Escape(
-                        obj["FriendlyName"]?.ToString() ?? 
-                        obj["DeviceName"]?.ToString() ?? 
+                        obj["FriendlyName"]?.ToString() ??
+                        obj["DeviceName"]?.ToString() ??
                         obj["Caption"]?.ToString() ?? "Неизвестно"
                     );
                     string version = Markup.Escape(obj["DriverVersion"]?.ToString() ?? "Н/Д");
@@ -94,27 +138,27 @@ class DriveManager
     }
 
     // Методы теперь используют фильтр DeviceClass, что гораздо надежнее
-    public static void GetAllDrives() => 
+    public static void GetAllDrives() =>
         ShowDriverTable("SELECT * FROM Win32_PnPSignedDriver WHERE Signer IS NOT NULL", "Все подписанные драйверы", "white");
 
-    public static void ShowCpuDrives() => 
+    public static void ShowCpuDrives() =>
         ShowDriverTable("SELECT * FROM Win32_PnPSignedDriver WHERE DeviceClass = 'PROCESSOR'", "Процессоры", "blue");
 
-    public static void ShowGpuDrives() => 
+    public static void ShowGpuDrives() =>
         ShowDriverTable("SELECT * FROM Win32_PnPSignedDriver WHERE DeviceClass = 'DISPLAY'", "Видеокарты (GPU)", "green");
 
-    public static void ShowNetworkDrives() => 
+    public static void ShowNetworkDrives() =>
         ShowDriverTable("SELECT * FROM Win32_PnPSignedDriver WHERE DeviceClass = 'NET'", "Сетевые адаптеры", "cyan");
 
-    public static void ShowAudioDrives() => 
+    public static void ShowAudioDrives() =>
         ShowDriverTable("SELECT * FROM Win32_PnPSignedDriver WHERE DeviceClass = 'MEDIA'", "Звук", "yellow");
 
-    public static void ShowDiskDrives() => 
+    public static void ShowDiskDrives() =>
         ShowDriverTable("SELECT * FROM Win32_PnPSignedDriver WHERE DeviceClass = 'DISKDRIVE'", "Диски", "magenta");
 
-    public static void ShowMonitorDrives() => 
+    public static void ShowMonitorDrives() =>
         ShowDriverTable("SELECT * FROM Win32_PnPSignedDriver WHERE DeviceClass = 'MONITOR'", "Мониторы", "teal");
 
-    public static void ShowInputDrives() => 
+    public static void ShowInputDrives() =>
         ShowDriverTable("SELECT * FROM Win32_PnPSignedDriver WHERE DeviceClass = 'KEYBOARD' OR DeviceClass = 'MOUSE'", "Устройства ввода", "orange1");
 }
